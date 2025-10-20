@@ -9,6 +9,8 @@ import Explore from "./pages/Explore";
 import CreateReport from "./pages/CreateReport";
 import ReportDetail from "./pages/ReportDetail";
 import Login from "./pages/Login";
+import AccountVerification from "./pages/AccountVerification";
+import VerificationGuard from "./components/VerificationGuard";
 
 function Router() {
   return (
@@ -18,6 +20,7 @@ function Router() {
       <Route path={"/create"} component={CreateReport} />
       <Route path={"/report/:id"} component={ReportDetail} />
       <Route path={"/login"} component={Login} />
+      <Route path={"/verify-account"} component={AccountVerification} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
@@ -30,15 +33,19 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider
         defaultTheme="light"
+        // switchable
       >
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <VerificationGuard>
+            <Router />
+          </VerificationGuard>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );
 }
+
 
 export default App;
 

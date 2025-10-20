@@ -40,6 +40,17 @@ export const appRouter = router({
         await db.updateUserProfile(ctx.user.id, input);
         return { success: true };
       }),
+
+    verifyAccount: protectedProcedure
+      .input(z.object({
+        phoneNumber: z.string(),
+        ktpNumber: z.string(),
+        ktpPhotoUrl: z.string(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await db.verifyUserAccount(ctx.user.id, input);
+        return { success: true };
+      }),
   }),
 
   // ============================================================================

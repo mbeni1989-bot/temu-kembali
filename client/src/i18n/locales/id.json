@@ -71,7 +71,7 @@
       "lost_item": "Barang Hilang",
       "found_item": "Barang Ditemukan",
       "lost_person": "Orang Hilang",
-      "find_person": "Cari Teman"
+      "find_person": "Cari Seseorang"
     },
     "no_reports": "Tidak Ada Laporan",
     "no_results": "Tidak ditemukan laporan yang sesuai dengan pencarian Anda",
@@ -87,7 +87,7 @@
       "lost_item": "Kehilangan",
       "found_item": "Penemuan",
       "lost_person": "Orang Hilang",
-      "find_person": "Cari Teman"
+      "find_person": "Cari Seseorang"
     },
     "category": {
       "title": "Kategori",

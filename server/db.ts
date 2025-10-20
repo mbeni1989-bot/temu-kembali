@@ -112,6 +112,19 @@ export async function updateUserProfile(userId: string, data: Partial<InsertUser
   await db.update(users).set(data).where(eq(users.id, userId));
 }
 
+export async function verifyUserAccount(userId: string, data: { phoneNumber: string; ktpNumber: string; ktpPhotoUrl: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(users).set({
+    phone: data.phoneNumber,
+    isVerified: true,
+  }).where(eq(users.id, userId));
+  
+  // In production, also store KTP data securely
+  // For now, we just mark the user as verified
+}
+
 // ============================================================================
 // REPORT OPERATIONS
 // ============================================================================
