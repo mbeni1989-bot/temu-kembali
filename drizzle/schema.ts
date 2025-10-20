@@ -16,7 +16,8 @@ export const users = mysqlTable("users", {
   phone: varchar("phone", { length: 20 }),
   avatar: text("avatar"),
   location: text("location"), // User's general location (city/province)
-  isVerified: boolean("isVerified").default(false), // ID verification status
+  emailVerified: boolean("emailVerified").default(false), // Email verification status
+  isVerified: boolean("isVerified").default(false), // ID verification status (phone + KTP)
   verificationDocUrl: text("verificationDocUrl"), // KTP/SIM document URL
   reputationScore: int("reputationScore").default(0), // Reputation points
 });

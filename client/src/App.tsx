@@ -10,6 +10,7 @@ import CreateReport from "./pages/CreateReport";
 import ReportDetail from "./pages/ReportDetail";
 import Login from "./pages/Login";
 import AccountVerification from "./pages/AccountVerification";
+import EmailVerification from "./pages/EmailVerification";
 import Messages from "./pages/Messages";
 import Profile from "./pages/Profile";
 import Donate from "./pages/Donate";
@@ -25,6 +26,7 @@ function Router() {
       <Route path={"/create"} component={CreateReport} />
       <Route path={"/report/:id"} component={ReportDetail} />
       <Route path={"/login"} component={Login} />
+      <Route path={"/verify-email"} component={EmailVerification} />
       <Route path={"/verify-account"} component={AccountVerification} />
       <Route path={"/messages"} component={Messages} />
       <Route path={"/profile"} component={Profile} />

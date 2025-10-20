@@ -48,6 +48,7 @@ export default function ReportDetail() {
   
   const [claimDialogOpen, setClaimDialogOpen] = useState(false);
   const [verificationDialogOpen, setVerificationDialogOpen] = useState(false);
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const [claimMessage, setClaimMessage] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [ktpImage, setKtpImage] = useState("");
@@ -61,9 +62,9 @@ export default function ReportDetail() {
 
   const createClaimMutation = trpc.claims.create.useMutation({
     onSuccess: () => {
-      toast.success("Klaim berhasil dikirim!");
       setClaimDialogOpen(false);
       setVerificationDialogOpen(false);
+      setSuccessDialogOpen(true);
       setClaimMessage("");
     },
     onError: (error) => {
@@ -559,6 +560,59 @@ export default function ReportDetail() {
           </div>
         </div>
       </div>
+
+      {/* Success Dialog */}
+      <Dialog open={successDialogOpen} onOpenChange={setSuccessDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="w-10 h-10 text-green-600" />
+            </div>
+            <DialogTitle className="text-2xl text-center">Selamat! 🎉</DialogTitle>
+            <DialogDescription className="text-center text-base">
+              Klaim Anda berhasil dikirim! Pemilik laporan akan segera menghubungi Anda melalui chat.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            <Alert className="bg-blue-50 border-blue-200">
+              <Info className="w-4 h-4 text-blue-600" />
+              <AlertDescription className="text-blue-900">
+                Terima kasih telah membantu! Jika Anda ingin mendukung aplikasi Temu Kembali, pertimbangkan untuk memberikan donasi.
+              </AlertDescription>
+            </Alert>
+
+            <div className="flex flex-col gap-3">
+              <Button
+                onClick={() => {
+                  setSuccessDialogOpen(false);
+                  setLocation("/donate");
+                }}
+                className="w-full"
+                size="lg"
+              >
+                ❤️ Donasi Sekarang
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setSuccessDialogOpen(false);
+                  setLocation("/messages");
+                }}
+                className="w-full"
+              >
+                Lihat Pesan
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => setSuccessDialogOpen(false)}
+                className="w-full"
+              >
+                Tutup
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
