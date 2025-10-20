@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { trpc } from "@/lib/trpc";
-import Navbar from "@/components/Navbar";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -82,7 +82,6 @@ export default function Explore() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       {/* Header */}
       <div className="bg-gradient-to-r from-primary/10 via-accent/5 to-secondary/10 border-b">
         <div className="container py-8">
@@ -108,28 +107,38 @@ export default function Explore() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={(value: any) => setActiveTab(value)} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-8 h-auto p-1 bg-muted/50 rounded-2xl">
-            <TabsTrigger value="lost_item" className="rounded-xl py-3 data-[state=active]:bg-primary data-[state=active]:text-white">
-              <Package className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">Barang Hilang</span>
-              <span className="sm:hidden">Hilang</span>
-            </TabsTrigger>
-            <TabsTrigger value="found_item" className="rounded-xl py-3 data-[state=active]:bg-accent data-[state=active]:text-white">
-              <Package className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">Barang Ditemukan</span>
-              <span className="sm:hidden">Ditemukan</span>
-            </TabsTrigger>
-            <TabsTrigger value="lost_person" className="rounded-xl py-3 data-[state=active]:bg-destructive data-[state=active]:text-white">
-              <UserSearch className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">Orang Hilang</span>
-              <span className="sm:hidden">Orang</span>
-            </TabsTrigger>
-            <TabsTrigger value="find_person" className="rounded-xl py-3 data-[state=active]:bg-secondary data-[state=active]:text-white">
-              <UserSearch className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">Cari Teman</span>
-              <span className="sm:hidden">Reunian</span>
-            </TabsTrigger>
-          </TabsList>
+          <div className="overflow-x-auto mb-8 -mx-4 px-4">
+            <TabsList className="inline-flex gap-2 bg-transparent p-0 h-auto min-w-full">
+              <TabsTrigger 
+                value="lost_item" 
+                className="flex-shrink-0 rounded-full px-6 py-3 border-2 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:border-primary data-[state=inactive]:border-border"
+              >
+                <Package className="w-4 h-4 mr-2" />
+                Barang Hilang
+              </TabsTrigger>
+              <TabsTrigger 
+                value="found_item" 
+                className="flex-shrink-0 rounded-full px-6 py-3 border-2 data-[state=active]:bg-accent data-[state=active]:text-white data-[state=active]:border-accent data-[state=inactive]:border-border"
+              >
+                <Package className="w-4 h-4 mr-2" />
+                Barang Ditemukan
+              </TabsTrigger>
+              <TabsTrigger 
+                value="lost_person" 
+                className="flex-shrink-0 rounded-full px-6 py-3 border-2 data-[state=active]:bg-destructive data-[state=active]:text-white data-[state=active]:border-destructive data-[state=inactive]:border-border"
+              >
+                <UserSearch className="w-4 h-4 mr-2" />
+                Orang Hilang
+              </TabsTrigger>
+              <TabsTrigger 
+                value="find_person" 
+                className="flex-shrink-0 rounded-full px-6 py-3 border-2 data-[state=active]:bg-secondary data-[state=active]:text-white data-[state=active]:border-secondary data-[state=inactive]:border-border"
+              >
+                <UserSearch className="w-4 h-4 mr-2" />
+                Cari Seseorang
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value={activeTab} className="mt-0">
             {isLoading ? (

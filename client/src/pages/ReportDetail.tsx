@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
-import Navbar from "@/components/Navbar";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -182,7 +182,6 @@ export default function ReportDetail() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       {/* Header */}
       <div className="bg-gradient-to-r from-primary/10 via-accent/5 to-secondary/10 border-b">
         <div className="container py-6">

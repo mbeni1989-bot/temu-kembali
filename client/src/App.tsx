@@ -10,7 +10,11 @@ import CreateReport from "./pages/CreateReport";
 import ReportDetail from "./pages/ReportDetail";
 import Login from "./pages/Login";
 import AccountVerification from "./pages/AccountVerification";
+import Messages from "./pages/Messages";
+import Profile from "./pages/Profile";
 import VerificationGuard from "./components/VerificationGuard";
+import TopNavigation from "./components/TopNavigation";
+import BottomNavigation from "./components/BottomNavigation";
 
 function Router() {
   return (
@@ -21,6 +25,8 @@ function Router() {
       <Route path={"/report/:id"} component={ReportDetail} />
       <Route path={"/login"} component={Login} />
       <Route path={"/verify-account"} component={AccountVerification} />
+      <Route path={"/messages"} component={Messages} />
+      <Route path={"/profile"} component={Profile} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
@@ -38,7 +44,13 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <VerificationGuard>
-            <Router />
+            <div className="flex flex-col min-h-screen">
+              <TopNavigation />
+              <main className="flex-1 pb-20">
+                <Router />
+              </main>
+              <BottomNavigation />
+            </div>
           </VerificationGuard>
         </TooltipProvider>
       </ThemeProvider>

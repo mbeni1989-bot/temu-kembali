@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import Navbar from "@/components/Navbar";
+
 import Logo from "@/components/Logo";
 import { useLocation } from "wouter";
 import {
@@ -25,11 +25,8 @@ const Map = lazy(() => import("@/components/Map"));
 export default function Home() {
   const { t } = useTranslation();
   const [, setLocation] = useLocation();
-
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      {/* Header/Nav */}
-      <Navbar />
+    <div className="min-h-screen flex flex-col">
 
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-accent/5 to-secondary/10">
