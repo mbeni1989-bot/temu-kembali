@@ -15,12 +15,7 @@ import {
   Users,
   Award,
   Search,
-  Globe,
 } from "lucide-react";
-import { Suspense } from "react";
-
-// Import MapboxMap
-import MapboxMap from "@/components/MapboxMap";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -38,8 +33,8 @@ export default function Home() {
               <span className="text-sm font-medium text-primary">{t("app.tagline")}</span>
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent animate-gradient">
-              {t("home.hero.title")}
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent animate-gradient" style={{ fontFamily: '"Pacifico", cursive' }}>
+              Temu Kembali
             </h1>
             
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -236,30 +231,6 @@ export default function Home() {
                 </p>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Global Map Section */}
-      <section className="py-20 bg-background">
-        <div className="container">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 mb-4">
-              <Globe className="w-8 h-8 text-primary" />
-              <h2 className="text-3xl md:text-4xl font-bold">
-                {t("home.map.title") || "Global Community"}
-              </h2>
-            </div>
-            <p className="text-muted-foreground text-lg">
-              {t("home.map.subtitle") || "See reports from around the world in real-time"}
-            </p>
-          </div>
-          <div className="max-w-5xl mx-auto">
-            <MapboxMap
-              center={[106.8456, -6.2088]} // Jakarta coordinates [lng, lat]
-              zoom={5}
-              className="h-[500px] w-full rounded-2xl shadow-2xl border-4 border-white"
-            />
           </div>
         </div>
       </section>
