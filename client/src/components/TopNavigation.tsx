@@ -4,7 +4,7 @@ export default function TopNavigation() {
   const [, setLocation] = useLocation();
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-background backdrop-blur supports-[backdrop-filter]:bg-background/75 border-b border-border">
+    <header className="sticky top-0 z-40 w-full bg-background backdrop-blur supports-[backdrop-filter]:bg-background/55 border-b border-border">
       <div className="container flex h-16 items-center justify-center">
         {/* Logo with Custom Font - 80% width */}
         <button

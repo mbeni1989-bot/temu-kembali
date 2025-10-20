@@ -24,7 +24,7 @@ export default function BottomNavigation() {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-background backdrop-blur supports-[backdrop-filter]:bg-background/75 border-t border-border z-50 safe-area-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 bg-background backdrop-blur supports-[backdrop-filter]:bg-background/55 border-t border-border z-50 safe-area-bottom">
       <div className="flex items-center justify-around h-16 max-w-screen-xl mx-auto px-2">
         {navItems.map((item) => {
           const isActive = location === item.path;

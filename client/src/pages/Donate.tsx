@@ -45,6 +45,13 @@ export default function Donate() {
   const paymentMethods = [
     { id: "card", name: "Credit/Debit Card", icon: CreditCard },
     { id: "paypal", name: "PayPal", icon: DollarSign },
+    { id: "bca", name: "BCA (Bank Central Asia)", icon: CreditCard },
+    { id: "mandiri", name: "Bank Mandiri", icon: CreditCard },
+    { id: "bni", name: "BNI (Bank Negara Indonesia)", icon: CreditCard },
+    { id: "bri", name: "BRI (Bank Rakyat Indonesia)", icon: CreditCard },
+    { id: "gopay", name: "GoPay", icon: DollarSign },
+    { id: "ovo", name: "OVO", icon: DollarSign },
+    { id: "dana", name: "DANA", icon: DollarSign },
     { id: "crypto", name: "Cryptocurrency", icon: Globe },
   ];
 
