@@ -51,7 +51,7 @@ export default function CreateReport() {
   const [incidentDate, setIncidentDate] = useState("");
   const [locationLat, setLocationLat] = useState<number | null>(null);
   const [locationLng, setLocationLng] = useState<number | null>(null);
-  const [mapCenter, setMapCenter] = useState<[number, number]>([-6.2088, 106.8456]); // Default: Jakarta
+  const [mapCenter, setMapCenter] = useState<[number, number]>([106.8456, -6.2088]); // Default: Jakarta [lng, lat]
   const [showMap, setShowMap] = useState(false);
   
   // Location suggestions
@@ -140,7 +140,7 @@ export default function CreateReport() {
             
             setLocationLat(lat);
             setLocationLng(lng);
-            setMapCenter([lat, lng]);
+            setMapCenter([lng, lat]); // Mapbox uses [lng, lat]
             setShowMap(true);
             
             const response = await fetch(
