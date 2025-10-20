@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { trpc } from "@/lib/trpc";
+import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -21,6 +23,7 @@ import { format } from "date-fns";
 import { id } from "date-fns/locale";
 
 export default function Explore() {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"lost_item" | "found_item" | "lost_person" | "find_person">("lost_item");
 
@@ -79,6 +82,7 @@ export default function Explore() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Navbar />
       {/* Header */}
       <div className="bg-gradient-to-r from-primary/10 via-accent/5 to-secondary/10 border-b">
         <div className="container py-8">

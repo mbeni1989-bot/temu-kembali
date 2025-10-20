@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
+import Navbar from "@/components/Navbar";
+import Logo from "@/components/Logo";
 import { useLocation } from "wouter";
 import {
   Package,
@@ -23,25 +24,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       {/* Header/Nav */}
-      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <Search className="w-6 h-6 text-white" />
-            </div>
-            <span className="font-bold text-xl">{t("app.name")}</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <LanguageSwitcher />
-            <Button onClick={() => setLocation("/explore")} variant="ghost">
-              {t("nav.explore")}
-            </Button>
-            <Button onClick={() => setLocation("/create")} variant="default">
-              {t("nav.create")}
-            </Button>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-accent/5 to-secondary/10">
@@ -281,12 +264,7 @@ export default function Home() {
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                  <Search className="w-5 h-5 text-white" />
-                </div>
-                <span className="font-bold text-lg">{t("app.name")}</span>
-              </div>
+              <Logo size="sm" />
               <p className="text-sm text-muted-foreground">
                 {t("home.footer.tagline")}
               </p>
