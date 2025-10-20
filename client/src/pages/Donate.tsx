@@ -33,7 +33,17 @@ export default function Donate() {
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [processing, setProcessing] = useState(false);
 
-  const presetAmounts = [5, 10, 25, 50, 100];
+  // Dynamic preset amounts based on currency
+  const getPresetAmounts = () => {
+    if (currency === "IDR") {
+      return [5000, 10000, 25000, 50000, 100000];
+    } else if (currency === "JPY") {
+      return [500, 1000, 2500, 5000, 10000];
+    }
+    return [5, 10, 25, 50, 100];
+  };
+
+  const presetAmounts = getPresetAmounts();
   const currencies = [
     { code: "USD", symbol: "$", name: "US Dollar" },
     { code: "EUR", symbol: "€", name: "Euro" },
@@ -229,14 +239,14 @@ export default function Donate() {
                   {paymentMethods.map((method) => {
                     const Icon = method.icon;
                     return (
-                      <div
+                      <label
                         key={method.id}
+                        htmlFor={method.id}
                         className={`flex items-center space-x-3 p-4 rounded-xl border-2 transition-all cursor-pointer ${
                           paymentMethod === method.id
                             ? "border-primary bg-primary/5"
                             : "border-border hover:border-primary/50"
                         }`}
-                        onClick={() => setPaymentMethod(method.id)}
                       >
                         <RadioGroupItem value={method.id} id={method.id} />
                         <Icon className="w-5 h-5 text-muted-foreground" />
@@ -246,7 +256,7 @@ export default function Donate() {
                         {method.id === "card" && (
                           <Badge variant="outline">Recommended</Badge>
                         )}
-                      </div>
+                      </label>
                     );
                   })}
                 </div>
