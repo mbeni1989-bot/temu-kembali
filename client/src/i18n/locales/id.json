@@ -1,0 +1,277 @@
+{
+  "app": {
+    "name": "Temu Kembali",
+    "tagline": "Platform Gotong Royong Digital untuk Menghubungkan Kehilangan dan Penemuan",
+    "description": "Temukan kembali barang, hewan, kendaraan yang hilang, atau bantu reunian dengan orang yang Anda cari"
+  },
+  "nav": {
+    "home": "Beranda",
+    "explore": "Jelajahi",
+    "create": "Buat Laporan",
+    "login": "Masuk",
+    "logout": "Keluar"
+  },
+  "home": {
+    "hero": {
+      "title": "Temu Kembali",
+      "subtitle": "Platform Gotong Royong Digital untuk Menghubungkan Kehilangan dan Penemuan",
+      "description": "Temukan kembali barang, hewan, kendaraan yang hilang, atau bantu reunian dengan orang yang Anda cari",
+      "cta_explore": "Jelajahi Laporan",
+      "cta_create": "Buat Laporan",
+      "cta_start": "Mulai Sekarang",
+      "cta_view": "Lihat Laporan"
+    },
+    "categories": {
+      "title": "Apa yang Bisa Kami Bantu?",
+      "subtitle": "Pilih kategori sesuai kebutuhan Anda",
+      "items": "Barang",
+      "items_desc": "Dompet, ponsel, kunci, dokumen, dan barang lainnya",
+      "pets": "Hewan Peliharaan",
+      "pets_desc": "Kucing, anjing, burung, dan hewan kesayangan",
+      "vehicles": "Kendaraan",
+      "vehicles_desc": "Motor, mobil, dan kendaraan bermotor",
+      "missing_persons": "Orang Hilang",
+      "missing_persons_desc": "Pencarian orang hilang dan reunian"
+    },
+    "features": {
+      "title": "Mengapa Temu Kembali?",
+      "subtitle": "Fitur-fitur yang membantu Anda menemukan kembali",
+      "location_search": "Pencarian Berbasis Lokasi",
+      "location_search_desc": "Temukan laporan di sekitar Anda dengan filter lokasi yang akurat",
+      "smart_matching": "Pencocokan Cerdas",
+      "smart_matching_desc": "Sistem otomatis mencocokkan laporan kehilangan dengan penemuan",
+      "secure_communication": "Komunikasi Aman",
+      "secure_communication_desc": "Chat terenkripsi di dalam aplikasi untuk menjaga privasi Anda",
+      "caring_community": "Komunitas Peduli",
+      "caring_community_desc": "Bergabung dengan ribuan orang yang saling membantu",
+      "reputation_system": "Sistem Reputasi",
+      "reputation_system_desc": "Pengguna terpercaya mendapat lencana dan poin reputasi",
+      "advanced_search": "Pencarian Lanjutan",
+      "advanced_search_desc": "Filter berdasarkan kategori, waktu, dan karakteristik spesifik"
+    },
+    "cta": {
+      "title": "Siap Membantu atau Mendapatkan Bantuan?",
+      "subtitle": "Bergabunglah dengan komunitas Temu Kembali dan mari saling membantu menemukan kembali yang hilang",
+      "button": "Daftar Gratis Sekarang"
+    },
+    "footer": {
+      "tagline": "Platform Gotong Royong Digital",
+      "about": "Tentang Kami",
+      "guide": "Panduan",
+      "privacy": "Privasi",
+      "contact": "Kontak",
+      "copyright": "Semua hak dilindungi."
+    }
+  },
+  "explore": {
+    "title": "Jelajahi Laporan",
+    "subtitle": "Temukan atau bantu orang lain menemukan yang hilang",
+    "search_placeholder": "Cari laporan...",
+    "tabs": {
+      "lost_item": "Barang Hilang",
+      "found_item": "Barang Ditemukan",
+      "lost_person": "Orang Hilang",
+      "find_person": "Cari Teman"
+    },
+    "no_reports": "Tidak Ada Laporan",
+    "no_results": "Tidak ditemukan laporan yang sesuai dengan pencarian Anda",
+    "no_reports_desc": "Belum ada laporan {type} saat ini",
+    "create_first": "Buat Laporan Pertama"
+  },
+  "create": {
+    "title": "Buat Laporan",
+    "subtitle": "Laporkan kehilangan atau penemuan untuk membantu sesama",
+    "report_type": {
+      "title": "Jenis Laporan",
+      "subtitle": "Pilih jenis laporan yang ingin Anda buat",
+      "lost_item": "Kehilangan",
+      "found_item": "Penemuan",
+      "lost_person": "Orang Hilang",
+      "find_person": "Cari Teman"
+    },
+    "category": {
+      "title": "Kategori",
+      "subtitle": "Pilih kategori yang sesuai",
+      "items": "Barang",
+      "pets": "Hewan",
+      "vehicles": "Kendaraan",
+      "person": "Orang"
+    },
+    "basic_info": {
+      "title": "Informasi Dasar",
+      "report_title": "Judul Laporan",
+      "report_title_placeholder": "Contoh: Hilang Dompet Kulit Coklat di Mall",
+      "description": "Deskripsi Detail",
+      "description_placeholder": "Jelaskan secara detail...",
+      "description_hint": "Gunakan bahasa yang lengkap dan hindari singkatan untuk membantu sistem pencocokan otomatis bekerja lebih akurat",
+      "location": "Lokasi Kejadian",
+      "location_placeholder": "Contoh: Mall Grand Indonesia",
+      "date": "Tanggal Kejadian",
+      "city": "Kota",
+      "city_placeholder": "Contoh: Jakarta",
+      "province": "Provinsi",
+      "province_placeholder": "Contoh: DKI Jakarta",
+      "country": "Negara",
+      "country_placeholder": "Contoh: Indonesia"
+    },
+    "item_details": {
+      "title": "Detail Barang",
+      "brand": "Merek",
+      "brand_placeholder": "Contoh: Samsung",
+      "color": "Warna",
+      "color_placeholder": "Contoh: Hitam",
+      "model": "Model/Tipe",
+      "model_placeholder": "Contoh: Galaxy S23"
+    },
+    "pet_details": {
+      "title": "Detail Hewan Peliharaan",
+      "type": "Jenis Hewan",
+      "type_placeholder": "Contoh: Kucing",
+      "breed": "Ras",
+      "breed_placeholder": "Contoh: Persian",
+      "name": "Nama Hewan",
+      "name_placeholder": "Contoh: Momo"
+    },
+    "vehicle_details": {
+      "title": "Detail Kendaraan",
+      "type": "Jenis Kendaraan",
+      "type_placeholder": "Contoh: Motor Honda Beat",
+      "plate": "Nomor Polisi",
+      "plate_placeholder": "Contoh: B 1234 XYZ"
+    },
+    "person_details": {
+      "title": "Detail Orang",
+      "subtitle_lost": "Informasi orang yang hilang",
+      "subtitle_find": "Informasi orang yang ingin Anda temukan kembali (reunian)",
+      "full_name": "Nama Lengkap",
+      "full_name_placeholder": "Nama lengkap",
+      "nickname": "Nama Panggilan",
+      "nickname_placeholder": "Nama panggilan atau alias",
+      "age": "Usia",
+      "age_placeholder": "Tahun",
+      "gender": "Jenis Kelamin",
+      "gender_male": "Laki-laki",
+      "gender_female": "Perempuan",
+      "height": "Tinggi (cm)",
+      "height_placeholder": "cm",
+      "weight": "Berat (kg)",
+      "weight_placeholder": "kg",
+      "physical_features": "Ciri-ciri Fisik",
+      "physical_features_placeholder": "Contoh: Rambut pendek hitam, mata coklat, tahi lalat di pipi kanan...",
+      "last_wearing": "Pakaian Terakhir yang Dikenakan",
+      "last_wearing_placeholder": "Contoh: Kaos putih, celana jeans biru, sepatu hitam...",
+      "police_report": "Nomor Laporan Polisi",
+      "police_report_placeholder": "Jika sudah melapor ke polisi",
+      "relationship": "Hubungan dengan Anda",
+      "relationship_placeholder": "Contoh: Teman SD, Saudara jauh, Tetangga lama...",
+      "last_known_info": "Informasi Terakhir yang Diketahui",
+      "last_known_info_placeholder": "Contoh: Terakhir tinggal di Jakarta tahun 2010, bekerja sebagai guru..."
+    },
+    "reward": {
+      "title": "Hadiah (Opsional)",
+      "checkbox": "Saya ingin memberikan hadiah untuk yang menemukan",
+      "amount": "Jumlah Hadiah",
+      "amount_placeholder": "Contoh: 500000"
+    },
+    "buttons": {
+      "cancel": "Batal",
+      "submit": "Buat Laporan",
+      "submitting": "Menyimpan..."
+    },
+    "messages": {
+      "success": "Laporan berhasil dibuat!",
+      "error": "Gagal membuat laporan",
+      "login_required": "Silakan login terlebih dahulu"
+    }
+  },
+  "detail": {
+    "description": "Deskripsi",
+    "details": "Detail",
+    "location": "Lokasi",
+    "date": "Tanggal Kejadian",
+    "brand": "Merek",
+    "color": "Warna",
+    "model": "Model",
+    "animal_type": "Jenis Hewan",
+    "breed": "Ras",
+    "name": "Nama",
+    "vehicle_type": "Jenis Kendaraan",
+    "plate": "Nomor Polisi",
+    "full_name": "Nama",
+    "nickname": "Nama Panggilan",
+    "age": "Usia",
+    "years": "tahun",
+    "gender": "Jenis Kelamin",
+    "male": "Laki-laki",
+    "female": "Perempuan",
+    "physical_features": "Ciri-ciri Fisik",
+    "last_wearing": "Pakaian Terakhir",
+    "police_report": "Nomor Laporan Polisi",
+    "reward": "Hadiah",
+    "action": {
+      "title": "Aksi",
+      "claim": "Klaim Laporan Ini"
+    },
+    "verification": {
+      "title": "Verifikasi Identitas",
+      "subtitle": "Untuk keamanan bersama, kami memerlukan verifikasi nomor telepon dan KTP Anda sebelum melakukan klaim",
+      "security_notice": "Data Anda akan dienkripsi dan hanya digunakan untuk verifikasi. Kami menjaga privasi Anda.",
+      "phone": "Nomor Telepon",
+      "phone_placeholder": "08xxxxxxxxxx",
+      "send_code": "Kirim Kode Verifikasi",
+      "id_card": "Foto KTP",
+      "upload_prompt": "Klik untuk unggah foto KTP",
+      "upload_success": "KTP berhasil diunggah",
+      "choose_file": "Pilih File",
+      "message": "Pesan (Opsional)",
+      "message_placeholder": "Tambahkan informasi tambahan jika diperlukan...",
+      "chat_notice": "Setelah klaim diterima, Anda akan dapat berkomunikasi dengan pelapor melalui chat di dalam aplikasi",
+      "submit": "Kirim Klaim",
+      "submitting": "Mengirim...",
+      "required_notice": "Dengan mengklaim, Anda setuju untuk memverifikasi identitas Anda"
+    },
+    "stats": {
+      "title": "Statistik",
+      "views": "Dilihat",
+      "times": "kali",
+      "created": "Dibuat"
+    },
+    "safety": {
+      "title": "Tips Keamanan",
+      "tip1": "Selalu berkomunikasi melalui chat di dalam aplikasi",
+      "tip2": "Jangan membagikan informasi pribadi di luar aplikasi",
+      "tip3": "Bertemu di tempat umum yang ramai",
+      "tip4": "Laporkan aktivitas mencurigakan kepada kami"
+    },
+    "status": {
+      "active": "Aktif",
+      "resolved": "Selesai",
+      "closed": "Ditutup"
+    },
+    "type": {
+      "lost_item": "Kehilangan",
+      "found_item": "Penemuan",
+      "lost_person": "Orang Hilang",
+      "find_person": "Cari Teman/Keluarga"
+    },
+    "not_found": "Laporan Tidak Ditemukan",
+    "back_to_explore": "Kembali ke Jelajah"
+  },
+  "common": {
+    "loading": "Memuat...",
+    "error": "Error",
+    "success": "Berhasil",
+    "required": "Wajib",
+    "optional": "Opsional",
+    "save": "Simpan",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "edit": "Edit",
+    "view": "Lihat",
+    "search": "Cari",
+    "filter": "Filter",
+    "sort": "Urutkan",
+    "close": "Tutup"
+  }
+}
+

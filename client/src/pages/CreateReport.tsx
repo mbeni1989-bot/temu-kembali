@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -20,15 +21,16 @@ import {
   UserSearch, 
   MapPin, 
   Calendar,
-  Upload,
   Info,
-  AlertCircle
+  AlertCircle,
+  Globe
 } from "lucide-react";
 
 type ReportType = "lost_item" | "found_item" | "lost_person" | "find_person";
 type Category = "barang" | "hewan" | "kendaraan" | "orang";
 
 export default function CreateReport() {
+  const { t, i18n } = useTranslation();
   const { user, isAuthenticated } = useAuth();
   const [, setLocation] = useLocation();
   const [reportType, setReportType] = useState<ReportType>("lost_item");
@@ -40,7 +42,12 @@ export default function CreateReport() {
   const [locationName, setLocationName] = useState("");
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
+  const [country, setCountry] = useState("");
   const [incidentDate, setIncidentDate] = useState("");
+  
+  // Location suggestions
+  const [locationSuggestions, setLocationSuggestions] = useState<string[]>([]);
+  const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
   
   // Item fields
   const [itemBrand, setItemBrand] = useState("");
@@ -73,13 +80,80 @@ export default function CreateReport() {
   const [hasReward, setHasReward] = useState(false);
   const [rewardAmount, setRewardAmount] = useState("");
 
+  // Detect user timezone
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  
+  // Auto-detect user location
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          try {
+            // Use reverse geocoding to get location details
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`
+            );
+            const data = await response.json();
+            
+            if (data.address) {
+              setCity(data.address.city || data.address.town || data.address.village || "");
+              setProvince(data.address.state || "");
+              setCountry(data.address.country || "");
+            }
+          } catch (error) {
+            console.error("Error getting location:", error);
+          }
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+        }
+      );
+    }
+  }, []);
+
+  // Location autocomplete
+  const handleLocationInput = async (value: string) => {
+    setLocationName(value);
+    
+    if (value.length > 2) {
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&limit=5`
+        );
+        const data = await response.json();
+        const suggestions = data.map((item: any) => item.display_name);
+        setLocationSuggestions(suggestions);
+        setShowLocationSuggestions(true);
+      } catch (error) {
+        console.error("Error fetching location suggestions:", error);
+      }
+    } else {
+      setShowLocationSuggestions(false);
+    }
+  };
+
+  const selectLocationSuggestion = (suggestion: string) => {
+    setLocationName(suggestion);
+    setShowLocationSuggestions(false);
+    
+    // Parse suggestion to extract city, province, country
+    const parts = suggestion.split(", ");
+    if (parts.length >= 2) {
+      setCity(parts[0]);
+      if (parts.length >= 3) {
+        setProvince(parts[parts.length - 2]);
+      }
+      setCountry(parts[parts.length - 1]);
+    }
+  };
+
   const createReportMutation = trpc.reports.create.useMutation({
     onSuccess: (data) => {
-      toast.success("Laporan berhasil dibuat!");
+      toast.success(t("create.messages.success"));
       setLocation(`/report/${data.reportId}`);
     },
     onError: (error) => {
-      toast.error(error.message || "Gagal membuat laporan");
+      toast.error(error.message || t("create.messages.error"));
     },
   });
 
@@ -87,7 +161,7 @@ export default function CreateReport() {
     e.preventDefault();
     
     if (!isAuthenticated) {
-      toast.error("Silakan login terlebih dahulu");
+      toast.error(t("create.messages.login_required"));
       return;
     }
 
@@ -151,14 +225,14 @@ export default function CreateReport() {
         <Card className="max-w-md w-full mx-4">
           <CardHeader className="text-center">
             <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
-            <CardTitle>Login Diperlukan</CardTitle>
+            <CardTitle>{t("create.messages.login_required")}</CardTitle>
             <CardDescription>
-              Anda harus login terlebih dahulu untuk membuat laporan
+              {t("create.messages.login_required")}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <a href={getLoginUrl()}>
-              <Button className="w-full">Login Sekarang</Button>
+              <Button className="w-full">{t("nav.login")}</Button>
             </a>
           </CardContent>
         </Card>
@@ -166,13 +240,17 @@ export default function CreateReport() {
     );
   }
 
+  // Determine which fields to show based on report type
+  const showRewardField = reportType === "lost_item" || reportType === "lost_person";
+  const isPersonReport = reportType === "lost_person" || reportType === "find_person";
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="bg-gradient-to-r from-primary/10 via-accent/5 to-secondary/10 border-b">
         <div className="container py-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Buat Laporan</h1>
-          <p className="text-muted-foreground">Laporkan kehilangan atau penemuan untuk membantu sesama</p>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">{t("create.title")}</h1>
+          <p className="text-muted-foreground">{t("create.subtitle")}</p>
         </div>
       </div>
 
@@ -181,120 +259,115 @@ export default function CreateReport() {
           {/* Report Type Selection */}
           <Card className="mb-6">
             <CardHeader>
-              <CardTitle>Jenis Laporan</CardTitle>
-              <CardDescription>Pilih jenis laporan yang ingin Anda buat</CardDescription>
+              <CardTitle>{t("create.report_type.title")}</CardTitle>
+              <CardDescription>{t("create.report_type.subtitle")}</CardDescription>
             </CardHeader>
             <CardContent>
-              <Tabs value={reportType} onValueChange={(value: any) => setReportType(value)}>
+              <Tabs value={reportType} onValueChange={(value: any) => {
+                setReportType(value);
+                if (value === "lost_person" || value === "find_person") {
+                  setCategory("orang");
+                } else {
+                  setCategory("barang");
+                }
+              }}>
                 <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto p-1">
                   <TabsTrigger value="lost_item" className="py-3">
                     <Package className="w-4 h-4 mr-2" />
-                    Kehilangan
+                    {t("create.report_type.lost_item")}
                   </TabsTrigger>
                   <TabsTrigger value="found_item" className="py-3">
                     <Package className="w-4 h-4 mr-2" />
-                    Penemuan
+                    {t("create.report_type.found_item")}
                   </TabsTrigger>
                   <TabsTrigger value="lost_person" className="py-3">
                     <UserSearch className="w-4 h-4 mr-2" />
-                    Orang Hilang
+                    {t("create.report_type.lost_person")}
                   </TabsTrigger>
                   <TabsTrigger value="find_person" className="py-3">
                     <UserSearch className="w-4 h-4 mr-2" />
-                    Cari Teman
+                    {t("create.report_type.find_person")}
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
             </CardContent>
           </Card>
 
-          {/* Category Selection */}
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Kategori</CardTitle>
-              <CardDescription>Pilih kategori yang sesuai</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                {(reportType === "lost_item" || reportType === "found_item") && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => setCategory("barang")}
-                      className={`p-4 rounded-xl border-2 transition-all ${
-                        category === "barang"
-                          ? "border-primary bg-primary/10"
-                          : "border-border hover:border-primary/50"
-                      }`}
-                    >
-                      <Package className="w-8 h-8 mx-auto mb-2 text-primary" />
-                      <p className="font-semibold">Barang</p>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setCategory("hewan")}
-                      className={`p-4 rounded-xl border-2 transition-all ${
-                        category === "hewan"
-                          ? "border-accent bg-accent/10"
-                          : "border-border hover:border-accent/50"
-                      }`}
-                    >
-                      <PawPrint className="w-8 h-8 mx-auto mb-2 text-accent" />
-                      <p className="font-semibold">Hewan</p>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setCategory("kendaraan")}
-                      className={`p-4 rounded-xl border-2 transition-all ${
-                        category === "kendaraan"
-                          ? "border-secondary bg-secondary/10"
-                          : "border-border hover:border-secondary/50"
-                      }`}
-                    >
-                      <Car className="w-8 h-8 mx-auto mb-2 text-secondary" />
-                      <p className="font-semibold">Kendaraan</p>
-                    </button>
-                  </>
-                )}
-                {(reportType === "lost_person" || reportType === "find_person") && (
+          {/* Category Selection - Only for item reports */}
+          {!isPersonReport && (
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle>{t("create.category.title")}</CardTitle>
+                <CardDescription>{t("create.category.subtitle")}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
                   <button
                     type="button"
-                    onClick={() => setCategory("orang")}
-                    className="p-4 rounded-xl border-2 border-primary bg-primary/10"
+                    onClick={() => setCategory("barang")}
+                    className={`p-4 rounded-xl border-2 transition-all ${
+                      category === "barang"
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover:border-primary/50"
+                    }`}
                   >
-                    <UserSearch className="w-8 h-8 mx-auto mb-2 text-primary" />
-                    <p className="font-semibold">Orang</p>
+                    <Package className="w-8 h-8 mx-auto mb-2 text-primary" />
+                    <p className="font-semibold">{t("create.category.items")}</p>
                   </button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+                  <button
+                    type="button"
+                    onClick={() => setCategory("hewan")}
+                    className={`p-4 rounded-xl border-2 transition-all ${
+                      category === "hewan"
+                        ? "border-accent bg-accent/10"
+                        : "border-border hover:border-accent/50"
+                    }`}
+                  >
+                    <PawPrint className="w-8 h-8 mx-auto mb-2 text-accent" />
+                    <p className="font-semibold">{t("create.category.pets")}</p>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCategory("kendaraan")}
+                    className={`p-4 rounded-xl border-2 transition-all ${
+                      category === "kendaraan"
+                        ? "border-secondary bg-secondary/10"
+                        : "border-border hover:border-secondary/50"
+                    }`}
+                  >
+                    <Car className="w-8 h-8 mx-auto mb-2 text-secondary" />
+                    <p className="font-semibold">{t("create.category.vehicles")}</p>
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Basic Information */}
           <Card className="mb-6">
             <CardHeader>
-              <CardTitle>Informasi Dasar</CardTitle>
+              <CardTitle>{t("create.basic_info.title")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label htmlFor="title">Judul Laporan *</Label>
+                <Label htmlFor="title">{t("create.basic_info.report_title")} *</Label>
                 <Input
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Contoh: Hilang Dompet Kulit Coklat di Mall"
+                  placeholder={t("create.basic_info.report_title_placeholder")}
                   required
                   className="mt-1.5"
                 />
               </div>
 
               <div>
-                <Label htmlFor="description">Deskripsi Detail *</Label>
+                <Label htmlFor="description">{t("create.basic_info.description")} *</Label>
                 <Textarea
                   id="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Jelaskan secara detail..."
+                  placeholder={t("create.basic_info.description_placeholder")}
                   rows={5}
                   required
                   className="mt-1.5"
@@ -302,28 +375,44 @@ export default function CreateReport() {
                 <Alert className="mt-2">
                   <Info className="w-4 h-4" />
                   <AlertDescription className="text-sm">
-                    Gunakan bahasa yang lengkap dan hindari singkatan untuk membantu sistem pencocokan otomatis bekerja lebih akurat
+                    {t("create.basic_info.description_hint")}
                   </AlertDescription>
                 </Alert>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="locationName">Lokasi Kejadian</Label>
+                <div className="relative">
+                  <Label htmlFor="locationName">{t("create.basic_info.location")}</Label>
                   <div className="relative mt-1.5">
-                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground z-10" />
                     <Input
                       id="locationName"
                       value={locationName}
-                      onChange={(e) => setLocationName(e.target.value)}
-                      placeholder="Contoh: Mall Grand Indonesia"
+                      onChange={(e) => handleLocationInput(e.target.value)}
+                      onBlur={() => setTimeout(() => setShowLocationSuggestions(false), 200)}
+                      onFocus={() => locationSuggestions.length > 0 && setShowLocationSuggestions(true)}
+                      placeholder={t("create.basic_info.location_placeholder")}
                       className="pl-10"
                     />
                   </div>
+                  {showLocationSuggestions && locationSuggestions.length > 0 && (
+                    <div className="absolute z-20 w-full mt-1 bg-background border rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                      {locationSuggestions.map((suggestion, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => selectLocationSuggestion(suggestion)}
+                          className="w-full text-left px-4 py-2 hover:bg-muted transition-colors text-sm"
+                        >
+                          {suggestion}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <div>
-                  <Label htmlFor="incidentDate">Tanggal Kejadian</Label>
+                  <Label htmlFor="incidentDate">{t("create.basic_info.date")}</Label>
                   <div className="relative mt-1.5">
                     <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
@@ -334,70 +423,87 @@ export default function CreateReport() {
                       className="pl-10"
                     />
                   </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {t("common.timezone", { timezone: userTimezone }) || `Timezone: ${userTimezone}`}
+                  </p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <Label htmlFor="city">Kota</Label>
+                  <Label htmlFor="city">{t("create.basic_info.city")}</Label>
                   <Input
                     id="city"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    placeholder="Contoh: Jakarta"
+                    placeholder={t("create.basic_info.city_placeholder")}
                     className="mt-1.5"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="province">Provinsi</Label>
+                  <Label htmlFor="province">{t("create.basic_info.province")}</Label>
                   <Input
                     id="province"
                     value={province}
                     onChange={(e) => setProvince(e.target.value)}
-                    placeholder="Contoh: DKI Jakarta"
+                    placeholder={t("create.basic_info.province_placeholder")}
                     className="mt-1.5"
                   />
+                </div>
+
+                <div>
+                  <Label htmlFor="country">{t("create.basic_info.country")}</Label>
+                  <div className="relative mt-1.5">
+                    <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="country"
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      placeholder={t("create.basic_info.country_placeholder")}
+                      className="pl-10"
+                    />
+                  </div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Category Specific Fields */}
-          {category === "barang" && (
+          {category === "barang" && !isPersonReport && (
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle>Detail Barang</CardTitle>
+                <CardTitle>{t("create.item_details.title")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <Label htmlFor="itemBrand">Merek</Label>
+                    <Label htmlFor="itemBrand">{t("create.item_details.brand")}</Label>
                     <Input
                       id="itemBrand"
                       value={itemBrand}
                       onChange={(e) => setItemBrand(e.target.value)}
-                      placeholder="Contoh: Samsung"
+                      placeholder={t("create.item_details.brand_placeholder")}
                       className="mt-1.5"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="itemColor">Warna</Label>
+                    <Label htmlFor="itemColor">{t("create.item_details.color")}</Label>
                     <Input
                       id="itemColor"
                       value={itemColor}
                       onChange={(e) => setItemColor(e.target.value)}
-                      placeholder="Contoh: Hitam"
+                      placeholder={t("create.item_details.color_placeholder")}
                       className="mt-1.5"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="itemModel">Model/Tipe</Label>
+                    <Label htmlFor="itemModel">{t("create.item_details.model")}</Label>
                     <Input
                       id="itemModel"
                       value={itemModel}
                       onChange={(e) => setItemModel(e.target.value)}
-                      placeholder="Contoh: Galaxy S23"
+                      placeholder={t("create.item_details.model_placeholder")}
                       className="mt-1.5"
                     />
                   </div>
@@ -406,40 +512,40 @@ export default function CreateReport() {
             </Card>
           )}
 
-          {category === "hewan" && (
+          {category === "hewan" && !isPersonReport && (
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle>Detail Hewan Peliharaan</CardTitle>
+                <CardTitle>{t("create.pet_details.title")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <Label htmlFor="animalType">Jenis Hewan</Label>
+                    <Label htmlFor="animalType">{t("create.pet_details.type")}</Label>
                     <Input
                       id="animalType"
                       value={animalType}
                       onChange={(e) => setAnimalType(e.target.value)}
-                      placeholder="Contoh: Kucing"
+                      placeholder={t("create.pet_details.type_placeholder")}
                       className="mt-1.5"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="animalBreed">Ras</Label>
+                    <Label htmlFor="animalBreed">{t("create.pet_details.breed")}</Label>
                     <Input
                       id="animalBreed"
                       value={animalBreed}
                       onChange={(e) => setAnimalBreed(e.target.value)}
-                      placeholder="Contoh: Persian"
+                      placeholder={t("create.pet_details.breed_placeholder")}
                       className="mt-1.5"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="animalName">Nama Hewan</Label>
+                    <Label htmlFor="animalName">{t("create.pet_details.name")}</Label>
                     <Input
                       id="animalName"
                       value={animalName}
                       onChange={(e) => setAnimalName(e.target.value)}
-                      placeholder="Contoh: Momo"
+                      placeholder={t("create.pet_details.name_placeholder")}
                       className="mt-1.5"
                     />
                   </div>
@@ -448,30 +554,30 @@ export default function CreateReport() {
             </Card>
           )}
 
-          {category === "kendaraan" && (
+          {category === "kendaraan" && !isPersonReport && (
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle>Detail Kendaraan</CardTitle>
+                <CardTitle>{t("create.vehicle_details.title")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="vehicleType">Jenis Kendaraan</Label>
+                    <Label htmlFor="vehicleType">{t("create.vehicle_details.type")}</Label>
                     <Input
                       id="vehicleType"
                       value={vehicleType}
                       onChange={(e) => setVehicleType(e.target.value)}
-                      placeholder="Contoh: Motor Honda Beat"
+                      placeholder={t("create.vehicle_details.type_placeholder")}
                       className="mt-1.5"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="vehiclePlate">Nomor Polisi</Label>
+                    <Label htmlFor="vehiclePlate">{t("create.vehicle_details.plate")}</Label>
                     <Input
                       id="vehiclePlate"
                       value={vehiclePlate}
                       onChange={(e) => setVehiclePlate(e.target.value)}
-                      placeholder="Contoh: B 1234 XYZ"
+                      placeholder={t("create.vehicle_details.plate_placeholder")}
                       className="mt-1.5"
                     />
                   </div>
@@ -480,36 +586,36 @@ export default function CreateReport() {
             </Card>
           )}
 
-          {category === "orang" && (
+          {isPersonReport && (
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle>Detail Orang</CardTitle>
+                <CardTitle>{t("create.person_details.title")}</CardTitle>
                 <CardDescription>
                   {reportType === "find_person" 
-                    ? "Informasi orang yang ingin Anda temukan kembali (reunian)"
-                    : "Informasi orang yang hilang"}
+                    ? t("create.person_details.subtitle_find")
+                    : t("create.person_details.subtitle_lost")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="personName">Nama Lengkap *</Label>
+                    <Label htmlFor="personName">{t("create.person_details.full_name")} *</Label>
                     <Input
                       id="personName"
                       value={personName}
                       onChange={(e) => setPersonName(e.target.value)}
-                      placeholder="Nama lengkap"
+                      placeholder={t("create.person_details.full_name_placeholder")}
                       required
                       className="mt-1.5"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="personNickname">Nama Panggilan</Label>
+                    <Label htmlFor="personNickname">{t("create.person_details.nickname")}</Label>
                     <Input
                       id="personNickname"
                       value={personNickname}
                       onChange={(e) => setPersonNickname(e.target.value)}
-                      placeholder="Nama panggilan atau alias"
+                      placeholder={t("create.person_details.nickname_placeholder")}
                       className="mt-1.5"
                     />
                   </div>
@@ -517,59 +623,59 @@ export default function CreateReport() {
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
-                    <Label htmlFor="personAge">Usia</Label>
+                    <Label htmlFor="personAge">{t("create.person_details.age")}</Label>
                     <Input
                       id="personAge"
                       type="number"
                       value={personAge}
                       onChange={(e) => setPersonAge(e.target.value)}
-                      placeholder="Tahun"
+                      placeholder={t("create.person_details.age_placeholder")}
                       className="mt-1.5"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="personGender">Jenis Kelamin</Label>
+                    <Label htmlFor="personGender">{t("create.person_details.gender")}</Label>
                     <Select value={personGender} onValueChange={(value: any) => setPersonGender(value)}>
                       <SelectTrigger className="mt-1.5">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="male">Laki-laki</SelectItem>
-                        <SelectItem value="female">Perempuan</SelectItem>
+                        <SelectItem value="male">{t("create.person_details.gender_male")}</SelectItem>
+                        <SelectItem value="female">{t("create.person_details.gender_female")}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div>
-                    <Label htmlFor="personHeight">Tinggi (cm)</Label>
+                    <Label htmlFor="personHeight">{t("create.person_details.height")}</Label>
                     <Input
                       id="personHeight"
                       type="number"
                       value={personHeight}
                       onChange={(e) => setPersonHeight(e.target.value)}
-                      placeholder="cm"
+                      placeholder={t("create.person_details.height_placeholder")}
                       className="mt-1.5"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="personWeight">Berat (kg)</Label>
+                    <Label htmlFor="personWeight">{t("create.person_details.weight")}</Label>
                     <Input
                       id="personWeight"
                       type="number"
                       value={personWeight}
                       onChange={(e) => setPersonWeight(e.target.value)}
-                      placeholder="kg"
+                      placeholder={t("create.person_details.weight_placeholder")}
                       className="mt-1.5"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="personPhysicalFeatures">Ciri-ciri Fisik</Label>
+                  <Label htmlFor="personPhysicalFeatures">{t("create.person_details.physical_features")}</Label>
                   <Textarea
                     id="personPhysicalFeatures"
                     value={personPhysicalFeatures}
                     onChange={(e) => setPersonPhysicalFeatures(e.target.value)}
-                    placeholder="Contoh: Rambut pendek hitam, mata coklat, tahi lalat di pipi kanan..."
+                    placeholder={t("create.person_details.physical_features_placeholder")}
                     rows={3}
                     className="mt-1.5"
                   />
@@ -578,24 +684,24 @@ export default function CreateReport() {
                 {reportType === "lost_person" && (
                   <>
                     <div>
-                      <Label htmlFor="personLastWearing">Pakaian Terakhir yang Dikenakan</Label>
+                      <Label htmlFor="personLastWearing">{t("create.person_details.last_wearing")}</Label>
                       <Textarea
                         id="personLastWearing"
                         value={personLastWearing}
                         onChange={(e) => setPersonLastWearing(e.target.value)}
-                        placeholder="Contoh: Kaos putih, celana jeans biru, sepatu hitam..."
+                        placeholder={t("create.person_details.last_wearing_placeholder")}
                         rows={2}
                         className="mt-1.5"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="policeReportNumber">Nomor Laporan Polisi</Label>
+                      <Label htmlFor="policeReportNumber">{t("create.person_details.police_report")}</Label>
                       <Input
                         id="policeReportNumber"
                         value={policeReportNumber}
                         onChange={(e) => setPoliceReportNumber(e.target.value)}
-                        placeholder="Jika sudah melapor ke polisi"
+                        placeholder={t("create.person_details.police_report_placeholder")}
                         className="mt-1.5"
                       />
                     </div>
@@ -605,23 +711,23 @@ export default function CreateReport() {
                 {reportType === "find_person" && (
                   <>
                     <div>
-                      <Label htmlFor="personRelationship">Hubungan dengan Anda</Label>
+                      <Label htmlFor="personRelationship">{t("create.person_details.relationship")}</Label>
                       <Input
                         id="personRelationship"
                         value={personRelationship}
                         onChange={(e) => setPersonRelationship(e.target.value)}
-                        placeholder="Contoh: Teman SD, Saudara jauh, Tetangga lama..."
+                        placeholder={t("create.person_details.relationship_placeholder")}
                         className="mt-1.5"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="personLastKnownInfo">Informasi Terakhir yang Diketahui</Label>
+                      <Label htmlFor="personLastKnownInfo">{t("create.person_details.last_known_info")}</Label>
                       <Textarea
                         id="personLastKnownInfo"
                         value={personLastKnownInfo}
                         onChange={(e) => setPersonLastKnownInfo(e.target.value)}
-                        placeholder="Contoh: Terakhir tinggal di Jakarta tahun 2010, bekerja sebagai guru..."
+                        placeholder={t("create.person_details.last_known_info_placeholder")}
                         rows={3}
                         className="mt-1.5"
                       />
@@ -633,10 +739,10 @@ export default function CreateReport() {
           )}
 
           {/* Reward */}
-          {(reportType === "lost_item" || reportType === "lost_person") && (
+          {showRewardField && (
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle>Hadiah (Opsional)</CardTitle>
+                <CardTitle>{t("create.reward.title")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center space-x-2">
@@ -646,19 +752,19 @@ export default function CreateReport() {
                     onCheckedChange={(checked) => setHasReward(checked as boolean)}
                   />
                   <Label htmlFor="hasReward" className="cursor-pointer">
-                    Saya ingin memberikan hadiah untuk yang menemukan
+                    {t("create.reward.checkbox")}
                   </Label>
                 </div>
 
                 {hasReward && (
                   <div>
-                    <Label htmlFor="rewardAmount">Jumlah Hadiah (Rp)</Label>
+                    <Label htmlFor="rewardAmount">{t("create.reward.amount")}</Label>
                     <Input
                       id="rewardAmount"
                       type="number"
                       value={rewardAmount}
                       onChange={(e) => setRewardAmount(e.target.value)}
-                      placeholder="Contoh: 500000"
+                      placeholder={t("create.reward.amount_placeholder")}
                       className="mt-1.5"
                     />
                   </div>
@@ -675,14 +781,14 @@ export default function CreateReport() {
               onClick={() => setLocation("/explore")}
               className="flex-1"
             >
-              Batal
+              {t("create.buttons.cancel")}
             </Button>
             <Button
               type="submit"
               disabled={createReportMutation.isPending}
               className="flex-1"
             >
-              {createReportMutation.isPending ? "Menyimpan..." : "Buat Laporan"}
+              {createReportMutation.isPending ? t("create.buttons.submitting") : t("create.buttons.submit")}
             </Button>
           </div>
         </form>
