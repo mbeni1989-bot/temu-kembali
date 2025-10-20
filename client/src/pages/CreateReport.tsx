@@ -28,9 +28,8 @@ import {
   Navigation,
   Map as MapIcon
 } from "lucide-react";
-import { lazy, Suspense } from "react";
-
-const InteractiveMap = lazy(() => import("@/components/InteractiveMap"));
+import { Suspense } from "react";
+import InteractiveMapbox from "@/components/InteractiveMapbox";
 
 type ReportType = "lost_item" | "found_item" | "lost_person" | "find_person";
 type Category = "barang" | "hewan" | "kendaraan" | "orang";
@@ -172,13 +171,14 @@ export default function CreateReport() {
   };
 
   // Handle map location change
-  const handleMapLocationChange = (lat: number, lng: number, address: string) => {
-    setLocationLat(lat);
-    setLocationLng(lng);
-    setLocationName(address);
+  const handleMapLocationChange = (location: { lat: number; lng: number; address: string }) => {
+    setLocationLat(location.lat);
+    setLocationLng(location.lng);
+    setLocationName(location.address);
+    setMapCenter([location.lng, location.lat]);
     
     // Parse address to extract city, province, country
-    const parts = address.split(", ");
+    const parts = location.address.split(", ");
     if (parts.length >= 2) {
       setCity(parts[0]);
       if (parts.length >= 3) {
@@ -522,14 +522,12 @@ export default function CreateReport() {
                         Click on the map to select a location, or drag the marker to adjust
                       </AlertDescription>
                     </Alert>
-                    <Suspense fallback={<div className="h-96 w-full rounded-xl bg-muted animate-pulse" />}>
-                      <InteractiveMap
-                        center={mapCenter}
-                        zoom={13}
-                        onLocationChange={handleMapLocationChange}
-                        className="h-96 w-full rounded-xl border-2 border-border"
-                      />
-                    </Suspense>
+                    <InteractiveMapbox
+                      center={mapCenter}
+                      zoom={13}
+                      onLocationChange={handleMapLocationChange}
+                      className="h-96 w-full rounded-xl border-2 border-border"
+                    />
                   </div>
                 )}
               </div>
