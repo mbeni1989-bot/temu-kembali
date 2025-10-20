@@ -1,3 +1,4 @@
+import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
@@ -18,12 +19,39 @@ import {
   Shield,
   CheckCircle,
   XCircle,
+  Camera,
+  Upload,
 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Profile() {
   const { t } = useTranslation();
   const { user, logout } = useAuth();
   const [, setLocation] = useLocation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("File size must be less than 5MB");
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result as string);
+        toast.success("Profile photo updated!");
+        // In production, upload to S3 and update user.avatar
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -54,8 +82,27 @@ export default function Profile() {
       <div className="bg-gradient-to-r from-primary/10 via-accent/5 to-secondary/10 border-b">
         <div className="container py-8">
           <div className="flex items-center gap-4">
-            <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center">
-              <User className="w-10 h-10 text-primary" />
+            <div className="relative group">
+              <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border-4 border-white shadow-lg">
+                {avatarPreview || user.avatar ? (
+                  <img src={avatarPreview || user.avatar || ""} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <User className="w-10 h-10 text-primary" />
+                )}
+              </div>
+              <button
+                onClick={handleAvatarClick}
+                className="absolute bottom-0 right-0 w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg hover:bg-primary/90 transition-colors"
+              >
+                <Camera className="w-4 h-4 text-white" />
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
+                className="hidden"
+              />
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold">{user.name || "Pengguna"}</h1>

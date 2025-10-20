@@ -1,4 +1,5 @@
 import { useState } from "react";
+import DonorBadge from "@/components/DonorBadge";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,8 @@ export default function Donate() {
   const [currency, setCurrency] = useState("USD");
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [processing, setProcessing] = useState(false);
+  const [showBadge, setShowBadge] = useState(false);
+  const [donationData, setDonationData] = useState({ amount: 0, currency: "", date: new Date() });
 
   // Dynamic preset amounts based on currency
   const getPresetAmounts = () => {
@@ -85,7 +88,12 @@ export default function Donate() {
 
     // Simulate payment processing (in production, integrate with Stripe/PayPal/etc)
     setTimeout(() => {
-      toast.success(`Thank you for your ${currency} ${donationAmount} donation! 🙏`);
+      setDonationData({
+        amount: donationAmount,
+        currency: currency,
+        date: new Date()
+      });
+      setShowBadge(true);
       setProcessing(false);
       setAmount("");
       setCustomAmount("");
@@ -327,6 +335,16 @@ export default function Donate() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Donor Badge */}
+      {showBadge && user && (
+        <DonorBadge
+          amount={donationData.amount}
+          currency={donationData.currency}
+          userName={user.name || "Anonymous Donor"}
+          date={donationData.date}
+        />
+      )}
     </div>
   );
 }
