@@ -342,6 +342,7 @@ export default function Donate() {
           amount={donationData.amount}
           currency={donationData.currency}
           userName={user.name || "Anonymous Donor"}
+          userAvatar={user.avatar || undefined}
           date={donationData.date}
         />
       )}

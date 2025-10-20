@@ -15,17 +15,25 @@ interface DonorBadgeProps {
   amount: number;
   currency: string;
   userName: string;
+  userAvatar?: string;
   date: Date;
 }
 
-export default function DonorBadge({ amount, currency, userName, date }: DonorBadgeProps) {
+export default function DonorBadge({ amount, currency, userName, userAvatar, date }: DonorBadgeProps) {
   const [open, setOpen] = useState(true);
 
   const badgeRef = useState<HTMLDivElement | null>(null);
 
   const formatAmount = () => {
     const symbol = currency === "USD" ? "$" : currency === "EUR" ? "€" : currency === "GBP" ? "£" : currency === "IDR" ? "Rp" : "¥";
-    return `${symbol}${amount.toLocaleString()}`;
+    
+    // Format with K for thousands, M for millions
+    if (amount >= 1000000) {
+      return `${symbol}${(amount / 1000000).toFixed(1)}M`;
+    } else if (amount >= 1000) {
+      return `${symbol}${(amount / 1000).toFixed(0)}K`;
+    }
+    return `${symbol}${amount}`;
   };
 
   const handleDownload = async () => {
@@ -67,9 +75,15 @@ export default function DonorBadge({ amount, currency, userName, date }: DonorBa
         {/* Badge Card */}
         <Card className="p-8 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 border-2 border-pink-200">
           <div className="text-center space-y-4">
-            {/* Heart Icon */}
-            <div className="w-20 h-20 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center mx-auto shadow-lg">
-              <Heart className="w-10 h-10 text-white fill-white" />
+            {/* Profile Photo */}
+            <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-xl mx-auto bg-gradient-to-br from-pink-500 to-purple-600">
+              {userAvatar ? (
+                <img src={userAvatar} alt={userName} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <Heart className="w-12 h-12 text-white fill-white" />
+                </div>
+              )}
             </div>
 
             {/* Badge Title */}
@@ -81,10 +95,12 @@ export default function DonorBadge({ amount, currency, userName, date }: DonorBa
             </div>
 
             {/* Donor Info */}
-            <div className="space-y-2">
-              <p className="text-lg font-semibold">{userName}</p>
-              <div className="inline-block px-4 py-2 bg-white/80 rounded-full border border-pink-200">
-                <p className="text-2xl font-bold text-pink-600">{formatAmount()}</p>
+            <div className="space-y-3">
+              <p className="text-xl font-bold">{userName}</p>
+              <div className="inline-flex items-center justify-center px-6 py-3 bg-white rounded-xl border-2 border-pink-300 shadow-md min-w-[140px]">
+                <p className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+                  {formatAmount()}
+                </p>
               </div>
               <p className="text-xs text-muted-foreground">
                 {date.toLocaleDateString("en-US", { 
