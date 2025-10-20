@@ -4,6 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLocation } from "wouter";
 import {
   User,
@@ -152,20 +153,52 @@ export default function Profile() {
           </Card>
         )}
 
+        {/* Activity Tabs */}
+        <Tabs defaultValue="reports" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="reports">Laporan Saya</TabsTrigger>
+            <TabsTrigger value="claims">Klaim Saya</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="reports" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Laporan Saya</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-center py-8">
+                  Belum ada laporan. Buat laporan pertama Anda!
+                </p>
+                <Button onClick={() => setLocation("/create")} className="w-full">
+                  Buat Laporan Baru
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="claims" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Klaim Saya</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-center py-8">
+                  Belum ada klaim. Klaim laporan yang sesuai!
+                </p>
+                <Button onClick={() => setLocation("/explore")} className="w-full">
+                  Jelajahi Laporan
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+
         {/* Quick Actions */}
         <Card>
           <CardHeader>
             <CardTitle>Menu</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <Button
-              variant="ghost"
-              className="w-full justify-start"
-              onClick={() => setLocation("/my-reports")}
-            >
-              <FileText className="w-5 h-5 mr-3" />
-              Laporan Saya
-            </Button>
             <Button
               variant="ghost"
               className="w-full justify-start"

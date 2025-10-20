@@ -245,13 +245,23 @@ export default function Home() {
             <p className="text-xl text-muted-foreground">
               {t("home.cta.subtitle")}
             </p>
-            <Button
-              size="lg"
-              onClick={() => setLocation("/create")}
-              className="text-lg px-8 h-12 shadow-lg hover:shadow-xl transition-all"
-            >
-              {t("home.cta.button")}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                size="lg"
+                onClick={() => setLocation("/create")}
+                className="text-lg px-8 h-12 shadow-lg hover:shadow-xl transition-all"
+              >
+                {t("home.cta.button")}
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => setLocation("/donate")}
+                className="text-lg px-8 h-12 shadow-lg hover:shadow-xl transition-all border-pink-500 text-pink-600 hover:bg-pink-50"
+              >
+                ❤️ Support Us
+              </Button>
+            </div>
           </div>
         </div>
       </section>

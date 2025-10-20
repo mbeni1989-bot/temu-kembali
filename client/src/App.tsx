@@ -12,6 +12,7 @@ import Login from "./pages/Login";
 import AccountVerification from "./pages/AccountVerification";
 import Messages from "./pages/Messages";
 import Profile from "./pages/Profile";
+import Donate from "./pages/Donate";
 import VerificationGuard from "./components/VerificationGuard";
 import TopNavigation from "./components/TopNavigation";
 import BottomNavigation from "./components/BottomNavigation";
@@ -27,6 +28,7 @@ function Router() {
       <Route path={"/verify-account"} component={AccountVerification} />
       <Route path={"/messages"} component={Messages} />
       <Route path={"/profile"} component={Profile} />
+      <Route path={"/donate"} component={Donate} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

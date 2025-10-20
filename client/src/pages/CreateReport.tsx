@@ -28,8 +28,17 @@ import {
   Navigation,
   Map as MapIcon
 } from "lucide-react";
-import { Suspense } from "react";
+import { Suspense, useState as useStateReact } from "react";
 import InteractiveMapbox from "@/components/InteractiveMapbox";
+import ImageUpload from "@/components/ImageUpload";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type ReportType = "lost_item" | "found_item" | "lost_person" | "find_person";
 type Category = "barang" | "hewan" | "kendaraan" | "orang";
@@ -88,6 +97,12 @@ export default function CreateReport() {
   // Reward
   const [hasReward, setHasReward] = useState(false);
   const [rewardAmount, setRewardAmount] = useState("");
+  
+  // Images
+  const [images, setImages] = useState<string[]>([]);
+  
+  // Ad dialog
+  const [showAdDialog, setShowAdDialog] = useState(false);
 
   // Detect user timezone
   const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -253,6 +268,7 @@ export default function CreateReport() {
       incidentDate: incidentDate ? new Date(incidentDate) : undefined,
       hasReward,
       rewardAmount: hasReward && rewardAmount ? parseFloat(rewardAmount) : undefined,
+      images: images.length > 0 ? JSON.stringify(images) : undefined,
     };
 
     let specificData = {};
@@ -895,6 +911,23 @@ export default function CreateReport() {
             </Card>
           )}
 
+          {/* Images Upload */}
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle>Photos / Images</CardTitle>
+              <CardDescription>
+                Upload photos to help identify the item or person (max 5 images)
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ImageUpload
+                images={images}
+                onImagesChange={setImages}
+                maxImages={5}
+              />
+            </CardContent>
+          </Card>
+
           {/* Submit Button */}
           <div className="flex gap-4">
             <Button
@@ -906,15 +939,60 @@ export default function CreateReport() {
               {t("create.buttons.cancel")}
             </Button>
             <Button
-              type="submit"
+              type="button"
               disabled={createReportMutation.isPending}
               className="flex-1"
+              onClick={() => setShowAdDialog(true)}
             >
               {createReportMutation.isPending ? t("create.buttons.submitting") : t("create.buttons.submit")}
             </Button>
           </div>
         </form>
       </div>
+
+      {/* Ad Support Dialog */}
+      <Dialog open={showAdDialog} onOpenChange={setShowAdDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">📢 Support Temu Kembali</DialogTitle>
+            <DialogDescription className="text-base leading-relaxed pt-2">
+              Aplikasi Temu Kembali saat ini <strong>belum mandiri</strong> dan masih bergantung pada iklan untuk operasional.
+              <br /><br />
+              Dengan menonton iklan singkat, Anda membantu kami menjaga layanan ini tetap <strong>gratis</strong> untuk semua orang.
+              <br /><br />
+              Terima kasih atas dukungan Anda! 🙏
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowAdDialog(false);
+                // Simulate watching ad (in production, integrate with ad network)
+                setTimeout(() => {
+                  handleSubmit(new Event('submit') as any);
+                }, 100);
+              }}
+              className="flex-1"
+            >
+              Skip Ad
+            </Button>
+            <Button
+              onClick={() => {
+                setShowAdDialog(false);
+                // Simulate watching ad (in production, integrate with ad network)
+                toast.info("Thank you for watching the ad!");
+                setTimeout(() => {
+                  handleSubmit(new Event('submit') as any);
+                }, 2000);
+              }}
+              className="flex-1"
+            >
+              Watch Ad (5s)
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
