@@ -24,8 +24,13 @@ import {
   Calendar,
   Info,
   AlertCircle,
-  Globe
+  Globe,
+  Navigation,
+  Map as MapIcon
 } from "lucide-react";
+import { lazy, Suspense } from "react";
+
+const InteractiveMap = lazy(() => import("@/components/InteractiveMap"));
 
 type ReportType = "lost_item" | "found_item" | "lost_person" | "find_person";
 type Category = "barang" | "hewan" | "kendaraan" | "orang";
@@ -45,6 +50,10 @@ export default function CreateReport() {
   const [province, setProvince] = useState("");
   const [country, setCountry] = useState("");
   const [incidentDate, setIncidentDate] = useState("");
+  const [locationLat, setLocationLat] = useState<number | null>(null);
+  const [locationLng, setLocationLng] = useState<number | null>(null);
+  const [mapCenter, setMapCenter] = useState<[number, number]>([-6.2088, 106.8456]); // Default: Jakarta
+  const [showMap, setShowMap] = useState(false);
   
   // Location suggestions
   const [locationSuggestions, setLocationSuggestions] = useState<string[]>([]);
@@ -90,9 +99,17 @@ export default function CreateReport() {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           try {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            // Set coordinates and map center
+            setLocationLat(lat);
+            setLocationLng(lng);
+            setMapCenter([lat, lng]);
+            
             // Use reverse geocoding to get location details
             const response = await fetch(
-              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
             );
             const data = await response.json();
             
@@ -111,6 +128,65 @@ export default function CreateReport() {
       );
     }
   }, []);
+
+  // Function to get current location
+  const handleGetCurrentLocation = () => {
+    if (navigator.geolocation) {
+      toast.info("Getting your location...");
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          try {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            setLocationLat(lat);
+            setLocationLng(lng);
+            setMapCenter([lat, lng]);
+            setShowMap(true);
+            
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+            );
+            const data = await response.json();
+            
+            if (data.address) {
+              setLocationName(data.display_name || "");
+              setCity(data.address.city || data.address.town || data.address.village || "");
+              setProvince(data.address.state || "");
+              setCountry(data.address.country || "");
+              toast.success("Location detected successfully!");
+            }
+          } catch (error) {
+            console.error("Error getting location:", error);
+            toast.error("Failed to get location details");
+          }
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+          toast.error("Failed to access your location. Please enable location services.");
+        }
+      );
+    } else {
+      toast.error("Geolocation is not supported by your browser");
+    }
+  };
+
+  // Handle map location change
+  const handleMapLocationChange = (lat: number, lng: number, address: string) => {
+    setLocationLat(lat);
+    setLocationLng(lng);
+    setLocationName(address);
+    
+    // Parse address to extract city, province, country
+    const parts = address.split(", ");
+    if (parts.length >= 2) {
+      setCity(parts[0]);
+      if (parts.length >= 3) {
+        setProvince(parts[parts.length - 2]);
+      }
+      setCountry(parts[parts.length - 1]);
+    }
+  };
 
   // Location autocomplete
   const handleLocationInput = async (value: string) => {
@@ -382,10 +458,35 @@ export default function CreateReport() {
                 </Alert>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="relative">
+              <div className="space-y-4">
+                <div>
                   <Label htmlFor="locationName">{t("create.basic_info.location")}</Label>
-                  <div className="relative mt-1.5">
+                  <div className="flex gap-2 mt-1.5">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleGetCurrentLocation}
+                      className="shrink-0"
+                    >
+                      <Navigation className="w-4 h-4 mr-2" />
+                      Use My Location
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowMap(!showMap)}
+                      className="shrink-0"
+                    >
+                      <MapIcon className="w-4 h-4 mr-2" />
+                      {showMap ? "Hide Map" : "Show Map"}
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <div className="relative">
                     <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground z-10" />
                     <Input
                       id="locationName"
@@ -413,6 +514,28 @@ export default function CreateReport() {
                   )}
                 </div>
 
+                {/* Interactive Map */}
+                {showMap && (
+                  <div className="col-span-full">
+                    <Alert className="mb-3">
+                      <Info className="w-4 h-4" />
+                      <AlertDescription className="text-sm">
+                        Click on the map to select a location, or drag the marker to adjust
+                      </AlertDescription>
+                    </Alert>
+                    <Suspense fallback={<div className="h-96 w-full rounded-xl bg-muted animate-pulse" />}>
+                      <InteractiveMap
+                        center={mapCenter}
+                        zoom={13}
+                        onLocationChange={handleMapLocationChange}
+                        className="h-96 w-full rounded-xl border-2 border-border"
+                      />
+                    </Suspense>
+                  </div>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="incidentDate">{t("create.basic_info.date")}</Label>
                   <div className="relative mt-1.5">
