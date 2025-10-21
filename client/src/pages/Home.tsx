@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 import Logo from "@/components/Logo";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import {
   Package,
   PawPrint,
@@ -280,7 +280,19 @@ export default function Home() {
               <h4 className="font-semibold mb-4">{t("home.footer.about")}</h4>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">{t("home.footer.guide")}</h4>
+              <h4 className="font-semibold mb-4">Legal</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>
+                  <Link href="/terms" className="hover:text-primary transition-colors">
+                    Terms of Service
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/privacy" className="hover:text-primary transition-colors">
+                    Privacy Policy
+                  </Link>
+                </li>
+              </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">{t("home.footer.contact")}</h4>

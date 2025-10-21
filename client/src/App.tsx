@@ -15,6 +15,9 @@ import Messages from "./pages/Messages";
 import Profile from "./pages/Profile";
 import Donate from "./pages/Donate";
 import Settings from "./pages/Settings";
+import TermsOfService from "./pages/TermsOfService";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import AdminDashboard from "./pages/AdminDashboard";
 import VerificationGuard from "./components/VerificationGuard";
 import TopNavigation from "./components/TopNavigation";
 import BottomNavigation from "./components/BottomNavigation";
@@ -34,6 +37,9 @@ function Router() {
       <Route path={"/profile"} component={Profile} />
       <Route path={"/donate"} component={Donate} />
       <Route path={"/settings"} component={Settings} />
+      <Route path={"/terms"} component={TermsOfService} />
+      <Route path={"/privacy"} component={PrivacyPolicy} />
+      <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
