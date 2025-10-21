@@ -20,7 +20,6 @@ import {
   Phone,
   MapPin,
   Lock,
-  Bell,
   Globe,
   Shield,
   Trash2,
@@ -48,15 +47,8 @@ export default function Settings() {
   const [country, setCountry] = useState("");
   const [postalCode, setPostalCode] = useState("");
 
-  // Notifications
-  const [emailNotif, setEmailNotif] = useState(true);
-  const [pushNotif, setPushNotif] = useState(true);
-  const [smsNotif, setSmsNotif] = useState(false);
-
   // Privacy
   const [profileVisibility, setProfileVisibility] = useState("public");
-  const [showEmail, setShowEmail] = useState(false);
-  const [showPhone, setShowPhone] = useState(false);
 
   // Language & Timezone
   const [language, setLanguage] = useState(i18n.language);
@@ -71,9 +63,7 @@ export default function Settings() {
     toast.success("Address saved!");
   };
 
-  const handleSaveNotifications = () => {
-    toast.success("Notification preferences saved!");
-  };
+
 
   const handleSavePrivacy = () => {
     toast.success("Privacy settings saved!");
@@ -272,51 +262,6 @@ export default function Settings() {
           </CardContent>
         </Card>
 
-        {/* Notifications */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Bell className="w-5 h-5" />
-              Notifications
-            </CardTitle>
-            <CardDescription>Choose how you want to be notified</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Email Notifications</p>
-                <p className="text-sm text-muted-foreground">
-                  Receive notifications via email
-                </p>
-              </div>
-              <Switch checked={emailNotif} onCheckedChange={setEmailNotif} />
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Push Notifications</p>
-                <p className="text-sm text-muted-foreground">
-                  Receive push notifications on your device
-                </p>
-              </div>
-              <Switch checked={pushNotif} onCheckedChange={setPushNotif} />
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">SMS Notifications</p>
-                <p className="text-sm text-muted-foreground">
-                  Receive notifications via SMS
-                </p>
-              </div>
-              <Switch checked={smsNotif} onCheckedChange={setSmsNotif} />
-            </div>
-            <Button onClick={handleSaveNotifications} className="w-full md:w-auto mt-4">
-              <Save className="w-4 h-4 mr-2" />
-              Save Preferences
-            </Button>
-          </CardContent>
-        </Card>
 
         {/* Privacy */}
         <Card>
@@ -341,26 +286,7 @@ export default function Settings() {
                 </SelectContent>
               </Select>
             </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Show Email on Profile</p>
-                <p className="text-sm text-muted-foreground">
-                  Let others see your email address
-                </p>
-              </div>
-              <Switch checked={showEmail} onCheckedChange={setShowEmail} />
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Show Phone on Profile</p>
-                <p className="text-sm text-muted-foreground">
-                  Let others see your phone number
-                </p>
-              </div>
-              <Switch checked={showPhone} onCheckedChange={setShowPhone} />
-            </div>
+
             <Button onClick={handleSavePrivacy} className="w-full md:w-auto mt-4">
               <Save className="w-4 h-4 mr-2" />
               Save Privacy Settings
