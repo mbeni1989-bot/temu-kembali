@@ -47,8 +47,7 @@ export default function Settings() {
   const [country, setCountry] = useState("");
   const [postalCode, setPostalCode] = useState("");
 
-  // Privacy
-  const [profileVisibility, setProfileVisibility] = useState("public");
+
 
   // Language & Timezone
   const [language, setLanguage] = useState(i18n.language);
@@ -65,9 +64,7 @@ export default function Settings() {
 
 
 
-  const handleSavePrivacy = () => {
-    toast.success("Privacy settings saved!");
-  };
+
 
   const handleChangeLanguage = (lang: string) => {
     setLanguage(lang);
@@ -263,36 +260,6 @@ export default function Settings() {
         </Card>
 
 
-        {/* Privacy */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="w-5 h-5" />
-              Privacy
-            </CardTitle>
-            <CardDescription>Control who can see your information</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <Label htmlFor="profileVisibility">Profile Visibility</Label>
-              <Select value={profileVisibility} onValueChange={setProfileVisibility}>
-                <SelectTrigger id="profileVisibility" className="mt-1.5">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="public">Public - Anyone can see</SelectItem>
-                  <SelectItem value="friends">Friends Only</SelectItem>
-                  <SelectItem value="private">Private - Only me</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <Button onClick={handleSavePrivacy} className="w-full md:w-auto mt-4">
-              <Save className="w-4 h-4 mr-2" />
-              Save Privacy Settings
-            </Button>
-          </CardContent>
-        </Card>
 
         {/* Language & Timezone */}
         <Card>
