@@ -6,9 +6,12 @@ import { z } from "zod";
 import { nanoid } from "nanoid";
 import * as db from "./db";
 import { TRPCError } from "@trpc/server";
+import { checkReportLimits } from "./reportLimits";
+import { checkLimitsRouter } from "./checkLimitsRouter";
 
 export const appRouter = router({
   system: systemRouter,
+  limits: checkLimitsRouter,
 
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
@@ -102,6 +105,15 @@ export const appRouter = router({
         rewardAmount: z.number().optional(),
       }))
       .mutation(async ({ ctx, input }) => {
+        // Check report limits
+        const limits = await checkReportLimits(ctx.user.id);
+        if (!limits.allowed) {
+          throw new TRPCError({
+            code: "TOO_MANY_REQUESTS",
+            message: limits.reason || "Report limit exceeded",
+          });
+        }
+        
         const reportId = nanoid();
         const report = await db.createReport({
           id: reportId,

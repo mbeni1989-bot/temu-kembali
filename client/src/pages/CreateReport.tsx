@@ -239,6 +239,11 @@ export default function CreateReport() {
     }
   };
 
+  // Check report limits
+  const { data: limits } = trpc.limits.reportLimits.useQuery(undefined, {
+    enabled: isAuthenticated,
+  });
+
   const createReportMutation = trpc.reports.create.useMutation({
     onSuccess: (data) => {
       toast.success(t("create.messages.success"));
@@ -254,6 +259,12 @@ export default function CreateReport() {
     
     if (!isAuthenticated) {
       toast.error(t("create.messages.login_required"));
+      return;
+    }
+
+    // Check report limits
+    if (limits && !limits.allowed) {
+      toast.error(limits.reason || "Report limit exceeded");
       return;
     }
 
