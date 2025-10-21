@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Search, Package } from "lucide-react";
 
 interface LogoProps {
   size?: "sm" | "md" | "lg";
@@ -23,7 +23,11 @@ export default function Logo({ size = "md", showText = true, className = "" }: L
       >
         {/* Animated gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-        <Search className={`${currentSize.icon} text-white relative z-10`} />
+        {/* Combined icon: Search + Package */}
+        <div className="relative z-10 flex items-center justify-center">
+          <Package className={`${currentSize.icon} text-white absolute opacity-40`} />
+          <Search className={`${currentSize.icon} text-white relative`} />
+        </div>
       </div>
 
       {/* Logo Text */}

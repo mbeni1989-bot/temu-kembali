@@ -31,6 +31,7 @@ import {
 import { Suspense, useState as useStateReact } from "react";
 import InteractiveMapbox from "@/components/InteractiveMapbox";
 import ImageUpload from "@/components/ImageUpload";
+import { useOfflineQueue } from "@/hooks/useOfflineQueue";
 import {
   Dialog,
   DialogContent,
@@ -244,6 +245,9 @@ export default function CreateReport() {
     enabled: isAuthenticated,
   });
 
+  // Offline queue support
+  const { queueReport, isOnline, queueSize } = useOfflineQueue();
+
   const createReportMutation = trpc.reports.create.useMutation({
     onSuccess: (data) => {
       toast.success(t("create.messages.success"));
@@ -317,9 +321,25 @@ export default function CreateReport() {
       };
     }
 
-    createReportMutation.mutate({
+    const reportData = {
       ...baseData,
       ...specificData,
+    };
+
+    // If offline or poor connection, queue the report
+    if (!isOnline) {
+      queueReport(reportData);
+      return;
+    }
+
+    // Try to submit online
+    createReportMutation.mutate(reportData, {
+      onError: (error: any) => {
+        // If network error, queue the report
+        if (error.message?.includes('fetch') || error.message?.includes('network')) {
+          queueReport(reportData);
+        }
+      },
     });
   };
 
