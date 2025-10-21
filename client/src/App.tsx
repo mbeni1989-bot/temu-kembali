@@ -14,6 +14,7 @@ import EmailVerification from "./pages/EmailVerification";
 import Messages from "./pages/Messages";
 import Profile from "./pages/Profile";
 import Donate from "./pages/Donate";
+import Settings from "./pages/Settings";
 import VerificationGuard from "./components/VerificationGuard";
 import TopNavigation from "./components/TopNavigation";
 import BottomNavigation from "./components/BottomNavigation";
@@ -31,6 +32,7 @@ function Router() {
       <Route path={"/messages"} component={Messages} />
       <Route path={"/profile"} component={Profile} />
       <Route path={"/donate"} component={Donate} />
+      <Route path={"/settings"} component={Settings} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

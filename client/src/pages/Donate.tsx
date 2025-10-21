@@ -46,6 +46,15 @@ export default function Donate() {
     return [5, 10, 25, 50, 100];
   };
 
+  const formatAmount = (value: number) => {
+    if (value >= 1000000) {
+      return `${(value / 1000000).toFixed(1)}M`;
+    } else if (value >= 1000) {
+      return `${(value / 1000).toFixed(0)}K`;
+    }
+    return value.toString();
+  };
+
   const presetAmounts = getPresetAmounts();
   const currencies = [
     { code: "USD", symbol: "$", name: "US Dollar" },
@@ -190,8 +199,7 @@ export default function Donate() {
                       }`}
                     >
                       <p className="font-bold text-lg">
-                        {selectedCurrency?.symbol}
-                        {preset}
+                        {selectedCurrency?.symbol}{formatAmount(preset)}
                       </p>
                     </button>
                   ))}
