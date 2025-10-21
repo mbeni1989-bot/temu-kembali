@@ -8,7 +8,7 @@ export const users = mysqlTable("users", {
   name: text("name"),
   email: varchar("email", { length: 320 }),
   loginMethod: varchar("loginMethod", { length: 64 }),
-  role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
+  role: mysqlEnum("role", ["user", "moderator", "admin", "super_admin"]).default("user").notNull(),
   createdAt: timestamp("createdAt").defaultNow(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow(),
   
@@ -286,4 +286,80 @@ export const reportFlags = mysqlTable("reportFlags", {
 
 export type ReportFlag = typeof reportFlags.$inferSelect;
 export type InsertReportFlag = typeof reportFlags.$inferInsert;
+
+
+/**
+ * Audit logs table - track all important activities
+ */
+export const auditLogs = mysqlTable("auditLogs", {
+  id: varchar("id", { length: 64 }).primaryKey(),
+  userId: varchar("userId", { length: 64 }).references(() => users.id),
+  
+  action: varchar("action", { length: 100 }).notNull(), // e.g., "user.create", "report.delete", "admin.promote"
+  entityType: varchar("entityType", { length: 50 }), // e.g., "user", "report", "claim"
+  entityId: varchar("entityId", { length: 64 }), // ID of affected entity
+  
+  details: text("details"), // JSON string with additional details
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: text("userAgent"),
+  
+  createdAt: timestamp("createdAt").defaultNow(),
+}, (table) => ({
+  userIdIdx: index("userId_idx").on(table.userId),
+  actionIdx: index("action_idx").on(table.action),
+  createdAtIdx: index("createdAt_idx").on(table.createdAt),
+}));
+
+export type AuditLog = typeof auditLogs.$inferSelect;
+export type InsertAuditLog = typeof auditLogs.$inferInsert;
+
+/**
+ * Disputes table - handle conflicts between users
+ */
+export const disputes = mysqlTable("disputes", {
+  id: varchar("id", { length: 64 }).primaryKey(),
+  claimId: varchar("claimId", { length: 64 }).notNull().references(() => claims.id),
+  reportId: varchar("reportId", { length: 64 }).notNull().references(() => reports.id),
+  
+  // Parties involved
+  reporterId: varchar("reporterId", { length: 64 }).notNull().references(() => users.id), // Person who filed dispute
+  respondentId: varchar("respondentId", { length: 64 }).notNull().references(() => users.id), // Other party
+  
+  reason: mysqlEnum("reason", [
+    "fraud",
+    "fake_item",
+    "not_cooperative",
+    "threatening",
+    "wrong_item",
+    "payment_issue",
+    "other"
+  ]).notNull(),
+  description: text("description").notNull(),
+  evidence: text("evidence"), // JSON array of evidence URLs
+  
+  status: mysqlEnum("status", [
+    "pending",
+    "under_review",
+    "resolved_reporter",
+    "resolved_respondent",
+    "resolved_split",
+    "dismissed"
+  ]).default("pending").notNull(),
+  
+  // Admin handling
+  assignedTo: varchar("assignedTo", { length: 64 }).references(() => users.id), // Admin handling the case
+  resolution: text("resolution"), // Admin's decision and reasoning
+  
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow(),
+  resolvedAt: timestamp("resolvedAt"),
+}, (table) => ({
+  claimIdIdx: index("claimId_idx").on(table.claimId),
+  reportIdIdx: index("reportId_idx").on(table.reportId),
+  statusIdx: index("status_idx").on(table.status),
+  assignedToIdx: index("assignedTo_idx").on(table.assignedTo),
+}));
+
+export type Dispute = typeof disputes.$inferSelect;
+export type InsertDispute = typeof disputes.$inferInsert;
 

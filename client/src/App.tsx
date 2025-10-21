@@ -18,6 +18,7 @@ import Settings from "./pages/Settings";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AdminDashboard from "./pages/AdminDashboard";
+import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import VerificationGuard from "./components/VerificationGuard";
 import TopNavigation from "./components/TopNavigation";
 import BottomNavigation from "./components/BottomNavigation";
@@ -40,6 +41,7 @@ function Router() {
       <Route path={"/terms"} component={TermsOfService} />
       <Route path={"/privacy"} component={PrivacyPolicy} />
       <Route path={"/admin"} component={AdminDashboard} />
+      <Route path={"/super-admin"} component={SuperAdminDashboard} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
