@@ -18,6 +18,7 @@ import Settings from "./pages/Settings";
 import VerificationGuard from "./components/VerificationGuard";
 import TopNavigation from "./components/TopNavigation";
 import BottomNavigation from "./components/BottomNavigation";
+import OfflineNotification from "./components/OfflineNotification";
 
 function Router() {
   return (
@@ -49,6 +50,7 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
+          <OfflineNotification />
           <VerificationGuard>
             <div className="flex flex-col min-h-screen">
               <TopNavigation />
