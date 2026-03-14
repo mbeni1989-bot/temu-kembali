@@ -1,0 +1,277 @@
+{
+  "app": {
+    "name": "Temu Kembali",
+    "tagline": "Digital Community Platform for Connecting Lost and Found",
+    "description": "Find lost items, pets, vehicles, or help reunite with people you're looking for"
+  },
+  "nav": {
+    "home": "Home",
+    "explore": "Explore",
+    "create": "Create Report",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "home": {
+    "hero": {
+      "title": "Temu Kembali",
+      "subtitle": "Digital Community Platform for Connecting Lost and Found",
+      "description": "Find lost items, pets, vehicles, or help reunite with people you're looking for",
+      "cta_explore": "Explore Reports",
+      "cta_create": "Create Report",
+      "cta_start": "Get Started",
+      "cta_view": "View Reports"
+    },
+    "categories": {
+      "title": "How Can We Help?",
+      "subtitle": "Choose a category that suits your needs",
+      "items": "Items",
+      "items_desc": "Wallets, phones, keys, documents, and other items",
+      "pets": "Pets",
+      "pets_desc": "Cats, dogs, birds, and beloved animals",
+      "vehicles": "Vehicles",
+      "vehicles_desc": "Motorcycles, cars, and motor vehicles",
+      "missing_persons": "Missing Persons",
+      "missing_persons_desc": "Search for missing persons and reunions"
+    },
+    "features": {
+      "title": "Why Temu Kembali?",
+      "subtitle": "Features that help you find what you're looking for",
+      "location_search": "Location-Based Search",
+      "location_search_desc": "Find reports around you with accurate location filters",
+      "smart_matching": "Smart Matching",
+      "smart_matching_desc": "Automatic system matches lost reports with found items",
+      "secure_communication": "Secure Communication",
+      "secure_communication_desc": "Encrypted in-app chat to protect your privacy",
+      "caring_community": "Caring Community",
+      "caring_community_desc": "Join thousands of people helping each other",
+      "reputation_system": "Reputation System",
+      "reputation_system_desc": "Trusted users get badges and reputation points",
+      "advanced_search": "Advanced Search",
+      "advanced_search_desc": "Filter by category, time, and specific characteristics"
+    },
+    "cta": {
+      "title": "Ready to Help or Get Help?",
+      "subtitle": "Join the Temu Kembali community and let's help each other find what's lost",
+      "button": "Sign Up Free Now"
+    },
+    "footer": {
+      "tagline": "Digital Community Platform",
+      "about": "About Us",
+      "guide": "Guide",
+      "privacy": "Privacy",
+      "contact": "Contact",
+      "copyright": "All rights reserved."
+    }
+  },
+  "explore": {
+    "title": "Explore Reports",
+    "subtitle": "Find or help others find what's lost",
+    "search_placeholder": "Search reports...",
+    "tabs": {
+      "lost_item": "Lost Items",
+      "found_item": "Found Items",
+      "lost_person": "Missing Persons",
+      "find_person": "Find Friends"
+    },
+    "no_reports": "No Reports",
+    "no_results": "No reports matching your search",
+    "no_reports_desc": "There are currently no {type} reports",
+    "create_first": "Create First Report"
+  },
+  "create": {
+    "title": "Create Report",
+    "subtitle": "Report a loss or finding to help others",
+    "report_type": {
+      "title": "Report Type",
+      "subtitle": "Choose the type of report you want to create",
+      "lost_item": "Lost",
+      "found_item": "Found",
+      "lost_person": "Missing Person",
+      "find_person": "Find Friend"
+    },
+    "category": {
+      "title": "Category",
+      "subtitle": "Choose the appropriate category",
+      "items": "Items",
+      "pets": "Pets",
+      "vehicles": "Vehicles",
+      "person": "Person"
+    },
+    "basic_info": {
+      "title": "Basic Information",
+      "report_title": "Report Title",
+      "report_title_placeholder": "Example: Lost Brown Leather Wallet at Mall",
+      "description": "Detailed Description",
+      "description_placeholder": "Explain in detail...",
+      "description_hint": "Use complete language and avoid abbreviations to help the automatic matching system work more accurately",
+      "location": "Incident Location",
+      "location_placeholder": "Example: Grand Indonesia Mall",
+      "date": "Incident Date",
+      "city": "City",
+      "city_placeholder": "Example: Jakarta",
+      "province": "Province/State",
+      "province_placeholder": "Example: DKI Jakarta",
+      "country": "Country",
+      "country_placeholder": "Example: Indonesia"
+    },
+    "item_details": {
+      "title": "Item Details",
+      "brand": "Brand",
+      "brand_placeholder": "Example: Samsung",
+      "color": "Color",
+      "color_placeholder": "Example: Black",
+      "model": "Model/Type",
+      "model_placeholder": "Example: Galaxy S23"
+    },
+    "pet_details": {
+      "title": "Pet Details",
+      "type": "Animal Type",
+      "type_placeholder": "Example: Cat",
+      "breed": "Breed",
+      "breed_placeholder": "Example: Persian",
+      "name": "Pet Name",
+      "name_placeholder": "Example: Momo"
+    },
+    "vehicle_details": {
+      "title": "Vehicle Details",
+      "type": "Vehicle Type",
+      "type_placeholder": "Example: Honda Beat Motorcycle",
+      "plate": "License Plate",
+      "plate_placeholder": "Example: B 1234 XYZ"
+    },
+    "person_details": {
+      "title": "Person Details",
+      "subtitle_lost": "Information about the missing person",
+      "subtitle_find": "Information about the person you want to reconnect with (reunion)",
+      "full_name": "Full Name",
+      "full_name_placeholder": "Full name",
+      "nickname": "Nickname",
+      "nickname_placeholder": "Nickname or alias",
+      "age": "Age",
+      "age_placeholder": "Years",
+      "gender": "Gender",
+      "gender_male": "Male",
+      "gender_female": "Female",
+      "height": "Height (cm)",
+      "height_placeholder": "cm",
+      "weight": "Weight (kg)",
+      "weight_placeholder": "kg",
+      "physical_features": "Physical Features",
+      "physical_features_placeholder": "Example: Short black hair, brown eyes, mole on right cheek...",
+      "last_wearing": "Last Worn Clothing",
+      "last_wearing_placeholder": "Example: White t-shirt, blue jeans, black shoes...",
+      "police_report": "Police Report Number",
+      "police_report_placeholder": "If already reported to police",
+      "relationship": "Relationship with You",
+      "relationship_placeholder": "Example: Elementary school friend, distant relative, old neighbor...",
+      "last_known_info": "Last Known Information",
+      "last_known_info_placeholder": "Example: Last lived in Jakarta in 2010, worked as a teacher..."
+    },
+    "reward": {
+      "title": "Reward (Optional)",
+      "checkbox": "I want to offer a reward for the finder",
+      "amount": "Reward Amount",
+      "amount_placeholder": "Example: 500000"
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "submit": "Create Report",
+      "submitting": "Saving..."
+    },
+    "messages": {
+      "success": "Report created successfully!",
+      "error": "Failed to create report",
+      "login_required": "Please login first"
+    }
+  },
+  "detail": {
+    "description": "Description",
+    "details": "Details",
+    "location": "Location",
+    "date": "Incident Date",
+    "brand": "Brand",
+    "color": "Color",
+    "model": "Model",
+    "animal_type": "Animal Type",
+    "breed": "Breed",
+    "name": "Name",
+    "vehicle_type": "Vehicle Type",
+    "plate": "License Plate",
+    "full_name": "Name",
+    "nickname": "Nickname",
+    "age": "Age",
+    "years": "years",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "physical_features": "Physical Features",
+    "last_wearing": "Last Worn",
+    "police_report": "Police Report Number",
+    "reward": "Reward",
+    "action": {
+      "title": "Action",
+      "claim": "Claim This Report"
+    },
+    "verification": {
+      "title": "Identity Verification",
+      "subtitle": "For mutual security, we require verification of your phone number and ID card before making a claim",
+      "security_notice": "Your data will be encrypted and only used for verification. We protect your privacy.",
+      "phone": "Phone Number",
+      "phone_placeholder": "08xxxxxxxxxx",
+      "send_code": "Send Verification Code",
+      "id_card": "ID Card Photo",
+      "upload_prompt": "Click to upload ID card photo",
+      "upload_success": "ID card uploaded successfully",
+      "choose_file": "Choose File",
+      "message": "Message (Optional)",
+      "message_placeholder": "Add additional information if needed...",
+      "chat_notice": "After the claim is accepted, you will be able to communicate with the reporter via in-app chat",
+      "submit": "Submit Claim",
+      "submitting": "Sending...",
+      "required_notice": "By claiming, you agree to verify your identity"
+    },
+    "stats": {
+      "title": "Statistics",
+      "views": "Viewed",
+      "times": "times",
+      "created": "Created"
+    },
+    "safety": {
+      "title": "Safety Tips",
+      "tip1": "Always communicate through in-app chat",
+      "tip2": "Don't share personal information outside the app",
+      "tip3": "Meet in crowded public places",
+      "tip4": "Report suspicious activity to us"
+    },
+    "status": {
+      "active": "Active",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+    "type": {
+      "lost_item": "Lost",
+      "found_item": "Found",
+      "lost_person": "Missing Person",
+      "find_person": "Find Friend/Family"
+    },
+    "not_found": "Report Not Found",
+    "back_to_explore": "Back to Explore"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "required": "Required",
+    "optional": "Optional",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "close": "Close"
+  }
+}
+

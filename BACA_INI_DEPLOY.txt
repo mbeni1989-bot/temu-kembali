@@ -1,0 +1,29 @@
+========================================
+  CARA AGAR CURSOR / AI YANG KERJAKAN
+  (Push ke GitHub = auto deploy Railway)
+========================================
+
+LANGKAH 1: Buka Terminal di Cursor
+   - Menu: Terminal → New Terminal
+   - Atau shortcut: Ctrl + `
+
+LANGKAH 2: Pastikan Anda di folder project
+   - Di terminal ketik:  cd temukembali-main
+   - (Kalau sudah di dalam folder temukembali-main, skip)
+
+LANGKAH 3: Jalankan script (Cursor yang jalanin)
+   - Ketik:  .\push-ke-github.ps1
+   - Enter
+
+LANGKAH 4: Kalau diminta login GitHub
+   - Ikuti saja (browser terbuka atau isi token)
+   - Cukup sekali saja
+
+Selesai. Setelah push berhasil, Railway akan otomatis build & deploy.
+Cek di https://railway.app → project temukembali → Deployments.
+
+========================================
+Kalau PowerShell bilang "script cannot be loaded":
+   Jalankan sekali:  Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+   Lalu coba lagi:   .\push-ke-github.ps1
+========================================
