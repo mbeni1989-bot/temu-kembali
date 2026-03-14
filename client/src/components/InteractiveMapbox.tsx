@@ -2,8 +2,8 @@ import { useRef, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
-// Mapbox access token
-mapboxgl.accessToken = "pk.eyJ1IjoiYmVuaTExIiwiYSI6ImNtZ2xlMnc1ZDBzajgybG9rdzMwNGVmMDIifQ.4izllpojnxVezj4_gHDDEA";
+// Mapbox access token dari env (set VITE_MAPBOX_TOKEN di Railway / .env)
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN ?? "";
 
 interface InteractiveMapboxProps {
   center: [number, number]; // [lng, lat]
