@@ -1,0 +1,27 @@
+========================================
+  Minta konfirmasi / login GitHub lagi
+  (Jalankan di PowerShell)
+========================================
+
+LANGKAH 1: Hapus kredensial GitHub yang tersimpan
+   (Supaya saat push nanti diminta login lagi)
+
+   cmdkey /delete:git:https://github.com
+
+   Kalau muncul "ERROR: ... not found" — tidak apa-apa, lanjut LANGKAH 2.
+
+
+LANGKAH 2: Masuk ke folder project
+
+   cd "c:\Users\rakaa\Downloads\temukembali-main\temukembali-main"
+
+
+LANGKAH 3: Push lagi (akan diminta login di browser)
+
+   git push -u origin main
+
+
+— Setelah itu browser akan terbuka untuk login GitHub.
+  Selesai login, push akan jalan. Pastikan koneksi internet stabil.
+
+========================================
